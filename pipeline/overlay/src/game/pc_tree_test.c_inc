@@ -1,0 +1,268 @@
+/* Opt-in integration test: invoke real player actions in the disposable field. */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void pc_tree_test_player_tick(GAME* game) {
+    extern int g_pc_tree_self_test;
+    extern int g_pc_tree_test_town;
+    static int frame;
+    static xyz_t tree;
+    static int ux, uz;
+    PLAYER_ACTOR* player;
+    mActor_name_t* item;
+    if (!g_pc_tree_self_test || !g_pc_tree_test_town) return;
+    player = GET_PLAYER_ACTOR_GAME(game);
+    if (!player) return;
+    frame++;
+    if (g_pc_tree_self_test == 4 && frame == 150 && getenv("PC_DUMP_ROOM") != NULL) {
+        /* dev: write every player-room wall (0x1020 bytes) and floor (0x2020 bytes) resource block to the folder */
+        extern void mRmTp_CopyWallData(u8* dst, int wall_no);
+        extern void mRmTp_CopyFloorData(u8* dst, int floor_no);
+        static u8 buf[0x2040] ATTRIBUTE_ALIGN(32);
+        char path[512]; FILE* f; int k;
+        for (k = 0; k < WALL_ETC_END; k++) {
+            memset(buf, 0, sizeof(buf)); mRmTp_CopyWallData(buf, k);
+            snprintf(path, sizeof(path), "%s/wall_%02d.bin", getenv("PC_DUMP_ROOM"), k);
+            if ((f = fopen(path, "wb")) != NULL) { fwrite(buf, 1, 0x1020, f); fclose(f); }
+            if (k < FLOOR_PLAYER_ROOM_END) { memset(buf, 0, sizeof(buf)); mRmTp_CopyFloorData(buf, k); }
+            if (k >= FLOOR_PLAYER_ROOM_END) continue;
+            snprintf(path, sizeof(path), "%s/floor_%02d.bin", getenv("PC_DUMP_ROOM"), k);
+            if ((f = fopen(path, "wb")) != NULL) { fwrite(buf, 1, 0x2020, f); fclose(f); }
+        }
+        { extern int g_pc_running; g_pc_running = 0; }
+    }
+    if (g_pc_tree_self_test == 4 && frame == 200 && getenv("PC_OPEN_MAP")) {
+        /* preview only: open the town map so its acre pictures can be captured */
+        mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_MAP, 1, 0);
+    }
+    if (g_pc_tree_self_test == 4 && (frame == 330 || frame == 331 || (frame >= 450 && frame < 690 && (frame % 20) < 2)) && getenv("PC_OPEN_INV") &&
+        !strcmp(getenv("PC_OPEN_INV"), "notice")) {
+        /* dev: press A on the open bulletin board = write a new notice (opens the editor) */
+        extern void pc_ctl_hold(unsigned short bits);
+        pc_ctl_hold(PAD_BUTTON_A);
+    }
+    if (g_pc_tree_self_test == 4 && frame == 200 && getenv("PC_OPEN_INV")) {
+        /* dev: fill the pockets and open them, for the PC mouse tests (PC_NLUI_FAKE_MOUSE) */
+        static const mActor_name_t items[] = { ITM_FOOD_APPLE, ITM_SHOVEL, ITM_ROD, ITM_NET, ITM_AXE, ITM_CLOTH000,
+                                               ITM_PAPER00, ITM_MONEY_10000, ITM_MONEY_10000, ITM_MONEY_10000 };
+        Private_c* priv = Common_Get(now_private);
+        int k;
+        for (k = 0; k < mPr_POCKETS_SLOT_COUNT; k++) {
+            mPr_SetPossessionItem(priv, k, k < (int)(sizeof(items) / sizeof(items[0])) ? items[k] : EMPTY_NO,
+                                  mPr_ITEM_COND_NORMAL);
+        }
+        priv->inventory.wallet = 12800;
+        if (!strcmp(getenv("PC_OPEN_INV"), "mscore")) {
+            mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_MSCORE, 0, 0);
+        } else if (!strcmp(getenv("PC_OPEN_INV"), "design")) {
+            mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_DESIGN, 0, 0);
+        } else if (!strcmp(getenv("PC_OPEN_INV"), "notice")) {
+            mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_NOTICE, 0, 0);
+        } else if (!strcmp(getenv("PC_OPEN_INV"), "ledit")) {
+            extern void mSM_open_submenu(Submenu*, int, int, int);
+            mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_LEDIT, 0, 0);
+        } else
+        mSM_open_submenu(&((GAME_PLAY*)game)->submenu, mSM_OVL_INVENTORY, 0, 0);
+    }
+    if (g_pc_tree_self_test == 4) {
+        /* Static gallery of every replaced plant; no actions are requested. */
+        if (frame == 120) {
+            static const mActor_name_t near_row[] = {
+                FLOWER_PANSIES0, FLOWER_PANSIES1, FLOWER_PANSIES2, FLOWER_COSMOS0, FLOWER_COSMOS1, FLOWER_COSMOS2,
+                FLOWER_TULIP0, FLOWER_TULIP1, FLOWER_TULIP2, FLOWER_LEAVES_PANSIES0, FLOWER_LEAVES_COSMOS0,
+                FLOWER_LEAVES_TULIP0, GRASS_A, GRASS_B, GRASS_C };
+            static const mActor_name_t tree_row[] = {
+                TREE_SAPLING, TREE_S0, TREE_S1, TREE_S2, DEAD_SAPLING, TREE_STUMP001, TREE_STUMP002, TREE_STUMP003,
+                TREE_APPLE_S2 };
+            static const mActor_name_t far_row[] = {
+                CEDAR_TREE_SAPLING, CEDAR_TREE_S0, CEDAR_TREE_S1, CEDAR_TREE_S2, DEAD_CEDAR_SAPLING,
+                CEDAR_TREE_STUMP001, CEDAR_TREE_STUMP004, TREE_PALM_SAPLING, TREE_PALM_S0, TREE_PALM_S1, TREE_PALM_S2,
+                TREE_PALM_FRUIT, DEAD_PALM_SAPLING, TREE_PALM_STUMP001, TREE_PALM_STUMP004 };
+            int x, z, i;
+            tree = player->actor_class.world.position;
+            mFI_Wpos2UtCenterWpos(&tree, tree);
+            mFI_Wpos2UtNum(&ux, &uz, tree);
+            for (z = -9; z <= -1; z++) for (x = -15; x <= 15; x++) mFI_UtNumtoFGSet_common(EMPTY_NO, ux+x, uz+z, TRUE);
+            /* PC_HOUSE_ROW=n spawns n villager house actors in a row (type from PC_HOUSE_SHAPE). */
+            if (getenv("PC_HOUSE_ROW")) {
+                int count = atoi(getenv("PC_HOUSE_ROW"));
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                for (i = 0; i < count; i++) {
+                    ACTOR* house = Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_HOUSE,
+                        tree.x - 100.0f * (count - 1) * 0.5f + 100.0f * i, tree.y, tree.z - 160.0f, 0, 0, 0,
+                        -1, -1, -1, (mActor_name_t)(NPC_HOUSE_START + i), -1, -1, -1);
+                    if (house) house->npc_id = NPC_HOUSE_START + i;
+                }
+                OSReport("[TreeTest] Spawned %d villager houses\n", count);
+            }
+            /* PC_INSECT_TEST: make sure the bug controller exists so the requested bugs can be spawned */
+            if ((getenv("PC_INSECT_TEST") || getenv("PC_INSECT_GALLERY") || getenv("PC_FISH_GALLERY")) && Common_Get(clip).insect_clip == NULL) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_INSECT, tree.x, tree.y, tree.z, 0, 0, 0,
+                                      -1, -1, -1, EMPTY_NO, -1, -1, -1);
+            }
+            /* PC_FISH_SHADOW_TEST: make sure the fish controller exists */
+            if (getenv("PC_FISH_SHADOW_TEST") && CLIP(gyo_clip) == NULL) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_GYOEI, tree.x, tree.y, tree.z, 0, 0, 0,
+                                      -1, -1, -1, EMPTY_NO, -1, -1, -1);
+            }
+            /* PC_SIGN_TEST=1 plants player signboards and starts the sign actor (preview only). */
+            if (getenv("PC_SIGN_TEST")) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                mFI_UtNumtoFGSet_common(SIGNBOARD, ux-2, uz-2, TRUE);
+                mFI_UtNumtoFGSet_common(SIGNBOARD, ux+2, uz-2, TRUE);
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_AC_SIGN, tree.x, tree.y, tree.z, 0, 0, 0,
+                                      -1, -1, -1, EMPTY_NO, -1, -1, -1);
+            }
+            /* PC_SNOW_TEST=1 rolls out the two snowman balls in front of the camera (preview only). */
+            if (getenv("PC_SNOW_TEST")) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_SNOWMAN, tree.x - 60.0f, tree.y, tree.z - 120.0f, 0, 0, 0,
+                                      -1, -1, -1, ETC_SNOWMAN_BALL_A, -1, -1, -1);
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_SNOWMAN, tree.x + 60.0f, tree.y, tree.z - 120.0f, 0, 0, 0,
+                                      -1, -1, -1, ETC_SNOWMAN_BALL_B, -1, -1, -1);
+                {   /* and a finished snowman (save slot 0) */
+                    mSN_snowman_data_c* sd = Save_GetPointer(snowmen.snowmen_data[0]);
+                    sd->exists = TRUE; sd->head_size = 170; sd->body_size = 220; sd->score = 0;
+                    Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_PSNOWMAN, tree.x + 120.0f, tree.y, tree.z + 20.0f, 0, 0, 0,
+                                          -1, -1, -1, SNOWMAN0, -1, -1, -1);
+                }
+            }
+            /* PC_POLICE_TEST=1 spawns a police box in front of the camera (preview only). */
+            if (getenv("PC_POLICE_TEST")) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                Actor_info_make_actor(&play->actor_info, game, mAc_PROFILE_POLICE_BOX, tree.x, tree.y, tree.z - 200.0f, 0, 0, 0,
+                                      -1, -1, -1, EMPTY_NO, -1, -1, -1);
+            }
+            /* PC_SHOP_SPAWN=1..4 spawns Nook's Cranny / Nook n Go / Nookway / Nookington's in front of the camera (preview only). */
+            if (getenv("PC_SHOP_SPAWN")) {
+                GAME_PLAY* play = (GAME_PLAY*)game;
+                int n = atoi(getenv("PC_SHOP_SPAWN"));
+                int prof = n == 2 ? mAc_PROFILE_CONVENI : n == 3 ? mAc_PROFILE_SUPER : n == 4 ? mAc_PROFILE_DEPART : mAc_PROFILE_SHOP;
+                Actor_info_make_actor(&play->actor_info, game, prof, tree.x, tree.y, tree.z - 260.0f, 0, 0, 0,
+                                      -1, -1, -1, EMPTY_NO, -1, -1, -1);
+            }
+            /* PC_PLANT_GALLERY_ITEMS="hex,hex,..." places a custom close row instead. */
+            if (getenv("PC_PLANT_GALLERY_ITEMS")) {
+                char list[256]; char* token; int count = 0, spacing = 2;
+                strncpy(list, getenv("PC_PLANT_GALLERY_ITEMS"), sizeof(list)-1); list[sizeof(list)-1] = 0;
+                if (getenv("PC_PLANT_GALLERY_SPACING")) spacing = atoi(getenv("PC_PLANT_GALLERY_SPACING"));
+                for (token = list; *token; token++) if (*token == ',') count++;
+                count++;
+                for (token = strtok(list, ","), i = 0; token; token = strtok(NULL, ","), i++)
+                    mFI_UtNumtoFGSet_common((mActor_name_t)strtol(token, NULL, 16), ux-(count-1)*spacing/2+i*spacing, uz-2, TRUE);
+                OSReport("[TreeTest] Planted %d custom gallery items\n", count);
+                return;
+            }
+            /* PC_PLANT_GALLERY=1/2/3 brings one row close to the camera. */
+            {
+                const char* env = getenv("PC_PLANT_GALLERY");
+                int focus = env ? atoi(env) : 0;
+                int near_z = focus == 1 ? 2 : focus ? 8 : 2, tree_z = focus == 2 ? 2 : focus ? 8 : 4, far_z = focus == 3 ? 2 : 7;
+                for (i = 0; i < (int)ARRAY_COUNT(near_row); i++) mFI_UtNumtoFGSet_common(near_row[i], ux-7+i, uz-near_z, TRUE);
+                for (i = 0; i < (int)ARRAY_COUNT(tree_row); i++) mFI_UtNumtoFGSet_common(tree_row[i], ux-8+2*i, uz-tree_z, TRUE);
+                for (i = 0; i < (int)ARRAY_COUNT(far_row); i++) mFI_UtNumtoFGSet_common(far_row[i], ux-14+2*i, uz-far_z, TRUE);
+            }
+            OSReport("[TreeTest] Planted disposable plant gallery around unit %d,%d\n", ux, uz);
+        }
+        return;
+    }
+    if (frame == 30 && getenv("PC_CLOTH_DUMP") != NULL) {
+        extern void pc_cloth_dump(const char* dir);
+        pc_cloth_dump(getenv("PC_CLOTH_DUMP"));
+        { extern int g_pc_running; g_pc_running = 0; }
+    }
+    if (getenv("PC_STUMP_TEST") != NULL) {
+        /* --tree-self-test with PC_STUMP_TEST=<stump item hex>: plant a stump in front of the player and sit on it */
+        if (frame == 120) {
+            tree = player->actor_class.world.position;
+            tree.x += 120; tree.z -= 40;
+            mFI_Wpos2UtCenterWpos(&tree, tree);
+            mFI_Wpos2UtNum(&ux, &uz, tree);
+            mFI_SetFG_common((mActor_name_t)strtol(getenv("PC_STUMP_TEST"), NULL, 16), tree, TRUE);
+            if (getenv("PC_STUMP_SIDE") != NULL) { /* approach from the west: the camera sees the seated player side-on */
+                player->actor_class.world.position.x = tree.x - 40;
+                player->actor_class.world.position.z = tree.z;
+                player->actor_class.shape_info.rotation.y = (s16)0x4000;
+                player->actor_class.world.angle.y = (s16)0x4000;
+            } else {
+                player->actor_class.world.position.x = tree.x;
+                player->actor_class.world.position.z = tree.z + 40;
+                player->actor_class.shape_info.rotation.y = (s16)0x8000;
+                player->actor_class.world.angle.y = (s16)0x8000;
+            }
+        }
+        if (frame == 200) OSReport("[StumpTest] sit requested=%d\n", Player_actor_CheckAndRequest_main_sitdown_stump(game));
+        if (frame == 320) OSReport("[StumpTest] main index=%d (sitdown_wait=%d)\n", player->now_main_index, mPlayer_INDEX_SITDOWN_WAIT);
+        return;
+    }
+    if (frame == 120) {
+        int x,z;
+        tree = player->actor_class.world.position;
+        tree.x += 120; /* Open path, clear of the house used by the demo spawn. */
+        tree.z -= 40;
+        mFI_Wpos2UtCenterWpos(&tree, tree);
+        mFI_Wpos2UtNum(&ux, &uz, tree);
+        /* Test data only: room for fruit to land around the target tree. */
+        for (z=-1;z<=1;z++) for(x=-1;x<=1;x++)
+            mFI_UtNumtoFGSet_common(EMPTY_NO,ux+x,uz+z,TRUE);
+        /* Species overrides exist only in this explicitly disposable harness.
+         * Normal town cedar placement and decoration selection never change. */
+        mFI_SetFG_common(g_pc_tree_self_test == 3 ? CEDAR_TREE_LIGHTS :
+                         g_pc_tree_self_test == 2 ? CEDAR_TREE :
+                         g_pc_tree_self_test == 5 ? TREE_S2 :
+                         g_pc_tree_self_test == 6 ? TREE_PALM_NOFRUIT_0 :
+                         g_pc_tree_self_test == 7 ? CEDAR_TREE_S1 :
+                         g_pc_tree_self_test == 8 ? TREE_S0 : TREE_APPLE_FRUIT, tree, TRUE);
+        player->actor_class.world.position.x = tree.x;
+        player->actor_class.world.position.z = tree.z+30;
+        player->actor_class.shape_info.rotation.y = (s16)0x8000;
+        player->actor_class.world.angle.y = (s16)0x8000;
+        OSReport("[TreeTest] Planted disposable test tree mode=%d at %.1f %.1f %.1f; unit %d,%d\n",g_pc_tree_self_test,tree.x,tree.y,tree.z,ux,uz);
+    }
+    if (frame == 240) {
+        item=mFI_GetUnitFG(tree);
+        int accepted=Player_actor_request_main_shake_tree_all(game,&tree,*item,ux,uz,mPlayer_REQUEST_PRIORITY_21);
+        OSReport("[TreeTest] Shake requested=%d tree=%04x\n",accepted,*item);
+    }
+    if (frame == 180) {
+        extern void pc_tree_test_refresh_cut_counters(void);
+        pc_tree_test_refresh_cut_counters();
+    }
+    if (frame == 420) {
+        int fruit=0,x,z;
+        for(z=-2;z<=2;z++) for(x=-2;x<=2;x++) {
+            item=mFI_UtNum2UtFG(ux+x,uz+z);
+            if(item && *item==ITM_FOOD_APPLE) fruit++;
+        }
+        item=mFI_GetUnitFG(tree);
+        OSReport("[TreeTest] After shake: tree=%04x fruit_on_ground=%d main=%d\n",*item,fruit,player->now_main_index);
+    }
+    if(frame==430) {
+        Player_actor_Set_ItemNoSubmenu(ITM_AXE);
+        Player_actor_request_main_wait_all(game,-5.0f,0.0f,0,mPlayer_REQUEST_PRIORITY_21);
+    }
+    if(frame==580 || frame==760 || frame==940 || (g_pc_tree_self_test >= 5 && frame==1120)) {
+        Player_actor_request_main_wait_all(game,-5.0f,0.0f,0,mPlayer_REQUEST_PRIORITY_21);
+    }
+    if(frame==480 || frame==660 || frame==840 || (g_pc_tree_self_test >= 5 && frame==1020)) {
+        item=mFI_GetUnitFG(tree);
+        int accepted=Player_actor_request_main_swing_axe_all(game,&tree,*item,ITM_AXE,ux,uz,mPlayer_REQUEST_PRIORITY_21);
+        OSReport("[TreeTest] Axe hit %d requested=%d tree=%04x\n",(frame-480)/180+1,accepted,*item);
+    }
+    if(frame==(g_pc_tree_self_test >= 5 ? 1260 : 1080)) {
+        item=mFI_GetUnitFG(tree);
+        int expected_stump = g_pc_tree_self_test == 6
+            ? (*item >= TREE_PALM_STUMP001 && *item <= TREE_PALM_STUMP004)
+            : (g_pc_tree_self_test == 2 || g_pc_tree_self_test == 3 || g_pc_tree_self_test == 7)
+            ? (*item >= CEDAR_TREE_STUMP001 && *item <= CEDAR_TREE_STUMP004)
+            : !!IS_ITEM_TREE_STUMP(*item);
+        OSReport("[TreeTest] Final tree=%04x stump=%d expected_species=%s main=%d\n",
+                 *item,!!IS_ITEM_TREE_STUMP(*item),expected_stump ? "PASS" : "FAIL",player->now_main_index);
+    }
+    if(frame==540 || frame==720 || frame==900) {
+        OSReport("[TreeTest] Post-hit main=%d anim=%.1f equipment=%04x\n", player->now_main_index,
+                 player->keyframe0.frame_control.current_frame, Player_actor_Get_ItemNoSubmenu());
+    }
+}

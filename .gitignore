@@ -1,0 +1,38 @@
+# build output
+launcher/*.exe
+launcher/*.res
+source/
+_source_staging/
+__pycache__/
+*.pyc
+
+# setup output (converted from the player's own ROMs; never commit)
+newleaf_cache/
+
+# player data and anything Nintendo-owned: never commit
+rom/
+save/
+texture_pack/
+*.iso
+*.gcm
+*.ciso
+*.nkit.iso
+*.3ds
+*.cci
+*.cia
+*.cxi
+*.nes
+*.fds
+*.gci
+*.bcres
+*.bclim
+*.arc
+*.szs
+*.rel
+*.dol
+*.dds
+*.bti
+
+# release assembly
+release/
+*.zip

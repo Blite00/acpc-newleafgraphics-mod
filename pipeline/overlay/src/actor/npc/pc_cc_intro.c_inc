@@ -1,0 +1,57 @@
+#ifdef TARGET_PC
+/* Character creator in the train intro (pc/src/pc_nl_creator.c), shared by both train guides.
+ * Rover's reply to "isn't it cool / cute?" ends asking what the player looks like (order 9 = 1). The window then
+ * hides like it does for the name menu, the creator runs, and Rover comes back with continue_msg. */
+extern int pc_cc_enabled(void) __attribute__((weak));
+extern void pc_cc_open(void) __attribute__((weak));
+extern int pc_cc_is_open(void) __attribute__((weak));
+extern void pc_cc_update(GAME* game) __attribute__((weak));
+extern int pc_cc_applied(void) __attribute__((weak));
+extern void pc_cc_intro_active(int on) __attribute__((weak));
+
+static int pc_cc_step = 0;
+
+/* the creator is linked and switched on */
+static int pc_cc_on(void) {
+    return pc_cc_enabled != NULL && pc_cc_open != NULL && pc_cc_is_open != NULL && pc_cc_update != NULL &&
+           pc_cc_enabled();
+}
+
+static int pc_cc_intro_proc(GAME* game, int continue_msg) {
+    mMsg_Window_c* msg_p = mMsg_Get_base_window_p();
+
+    switch (pc_cc_step) {
+        case 0:
+            if (mDemo_Get_OrderValue(mDemo_ORDER_NPC0, 9) != 0 && mMsg_Check_MainNormalContinue(msg_p) == TRUE) {
+                mDemo_Set_OrderValue(mDemo_ORDER_NPC0, 9, 0);
+                mMsg_Set_LockContinue(msg_p);
+                mMsg_request_main_disappear_wait_type1(msg_p);
+                pc_cc_step = 1;
+            }
+            break;
+        case 1:
+            if (mMsg_CHECK_MAIN_WAIT() == TRUE) {
+                pc_cc_open();
+                pc_cc_step = 2;
+            }
+            break;
+        case 2:
+            pc_cc_update(game);
+            if (!pc_cc_is_open()) {
+                mMsg_REQUEST_MAIN_APPEAR_WAIT_TYPE1();
+                pc_cc_step = 3;
+            }
+            break;
+        case 3:
+            if (mMsg_Check_not_series_main_wait(msg_p) == TRUE) {
+                mMsg_Unset_LockContinue(msg_p);
+                mMsg_Set_continue_msg_num(msg_p, continue_msg);
+                mMsg_Set_ForceNext(msg_p);
+                pc_cc_step = 0;
+                return TRUE;
+            }
+            break;
+    }
+    return FALSE;
+}
+#endif

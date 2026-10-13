@@ -1,0 +1,29 @@
+{
+ "sum_liccapiano": {
+  "nl": "rmk_oth_piano_b",
+  "variants": {
+   "base": "90"
+  }
+ },
+ "sum_golfbag01": {
+  "tint": {
+   "base_00": [
+    62,
+    112,
+    70
+   ]
+  }
+ },
+ "sum_golfbag02": {
+  "tint": {
+   "base_00": [
+    205,
+    202,
+    192
+   ]
+  }
+ },
+ "tak_arwing": {
+  "yaw": 90.0
+ }
+}

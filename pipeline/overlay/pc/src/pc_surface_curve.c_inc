@@ -1,0 +1,91 @@
+/* Render-only subdivision at shared world-space planes. Large native water
+ * triangles otherwise bend only at their corners and leave pads/shadows above
+ * the chord. Interpolated attributes and collision geometry are unchanged. */
+static struct { int enabled; float along[4]; } pc_surface_curve;
+static PCGXVertex pc_surface_curve_output[4095];
+static int pc_surface_curve_count;
+
+static void pc_surface_curve_capture(void) {
+    extern int pc_terrain_texture_kind(GLuint tex);
+    pc_surface_curve.enabled=0;
+    if (!rolling_outdoor || g_pc_rolling_world_strength<=0 || !pc_rolling_world_projection_matches()) return;
+    int map=g_gx.tev_stages[0].tex_map;
+    int kind=map>=0 && map<8 ? pc_terrain_texture_kind(g_gx.gl_textures[map]) : 0;
+    if (!((kind>=1 && kind<=7) || kind==10 || (kind>=20 && kind<=26))) return;
+    float eye_axis[3];
+    for(int i=0;i<3;i++) {
+        eye_axis[i]=0;
+        for(int j=0;j<3;j++) eye_axis[i]+=rolling_view_rotation[i*3+j]*rolling_axis[j];
+    }
+    for(int j=0;j<4;j++) {
+        pc_surface_curve.along[j]=0;
+        for(int i=0;i<3;i++) pc_surface_curve.along[j]+=eye_axis[i]*g_gx.pos_mtx[g_gx.current_mtx][i][j];
+    }
+    for(int i=0;i<3;i++) pc_surface_curve.along[3]+=rolling_axis[i]*rolling_camera[i];
+    pc_surface_curve.enabled=1;
+}
+static float pc_surface_along(const PCGXVertex* v) {
+    return pc_surface_curve.along[3]+v->position[0]*pc_surface_curve.along[0]+
+        v->position[1]*pc_surface_curve.along[1]+v->position[2]*pc_surface_curve.along[2];
+}
+static PCGXVertex pc_surface_lerp(const PCGXVertex* a,const PCGXVertex* b,float t) {
+    PCGXVertex v;
+    for(int i=0;i<3;i++) {
+        v.position[i]=a->position[i]+t*(b->position[i]-a->position[i]);
+        v.normal[i]=a->normal[i]+t*(b->normal[i]-a->normal[i]);
+    }
+    for(int i=0;i<4;i++) {
+        v.color0[i]=(unsigned char)(a->color0[i]+t*((float)b->color0[i]-a->color0[i])+0.5f);
+        v.color1[i]=(unsigned char)(a->color1[i]+t*((float)b->color1[i]-a->color1[i])+0.5f);
+    }
+    for(int i=0;i<8;i++)for(int j=0;j<2;j++)v.texcoord[i][j]=a->texcoord[i][j]+t*(b->texcoord[i][j]-a->texcoord[i][j]);
+    return v;
+}
+static int pc_surface_clip(const PCGXVertex* in,int count,PCGXVertex* out,float plane,int greater) {
+    int n=0;
+    for(int i=0;i<count;i++) {
+        const PCGXVertex* a=&in[i];const PCGXVertex* b=&in[(i+1)%count];
+        float da=pc_surface_along(a)-plane,db=pc_surface_along(b)-plane;
+        int ai=greater?da>=0:da<=0,bi=greater?db>=0:db<=0;
+        if(ai)out[n++]=*a;
+        if(ai!=bi)out[n++]=pc_surface_lerp(a,b,da/(da-db));
+    }
+    return n;
+}
+static void pc_surface_curve_submit(void) {
+    if(!pc_surface_curve_count)return;
+    pc_gx_buffer_data_profiled(GL_ARRAY_BUFFER,pc_surface_curve_count*sizeof(PCGXVertex),pc_surface_curve_output,GL_STREAM_DRAW);
+    glDrawArrays(GL_TRIANGLES,0,pc_surface_curve_count);
+    pc_profiler_add_count_draw(pc_surface_curve_count,0);
+    pc_gx_draw_call_count++;
+    pc_surface_curve_count=0;
+}
+static void pc_surface_curve_emit(const PCGXVertex* a,const PCGXVertex* b,const PCGXVertex* c) {
+    if(pc_surface_curve_count+3>4095)pc_surface_curve_submit();
+    pc_surface_curve_output[pc_surface_curve_count++]=*a;
+    pc_surface_curve_output[pc_surface_curve_count++]=*b;
+    pc_surface_curve_output[pc_surface_curve_count++]=*c;
+}
+static void pc_surface_curve_triangle(const PCGXVertex* a,const PCGXVertex* b,const PCGXVertex* c) {
+    PCGXVertex tri[3]={*a,*b,*c},lo[8],hi[8];
+    float x=pc_surface_along(a),y=pc_surface_along(b),z=pc_surface_along(c);
+    float minimum=fminf(x,fminf(y,z)),maximum=fmaxf(x,fmaxf(y,z));
+    if(!isfinite(minimum)||!isfinite(maximum)){pc_surface_curve_emit(a,b,c);return;}
+    int first=(int)floorf(minimum/32.0f),last=(int)ceilf(maximum/32.0f)-1;
+    if(last<=first || last-first>512){pc_surface_curve_emit(a,b,c);return;}
+    for(int slab=first;slab<=last;slab++) {
+        int n=pc_surface_clip(tri,3,lo,slab*32.0f,1);
+        n=pc_surface_clip(lo,n,hi,(slab+1)*32.0f,0);
+        for(int i=1;i+1<n;i++)pc_surface_curve_emit(&hi[0],&hi[i],&hi[i+1]);
+    }
+}
+static int pc_surface_curve_draw(const PCGXVertex* v,int count,int prim) {
+    if(!pc_surface_curve.enabled || (prim!=GX_TRIANGLES && prim!=GX_QUADS && prim!=GX_TRIANGLESTRIP && prim!=GX_TRIANGLEFAN))return 0;
+    pc_surface_curve_count=0;
+    if(prim==GX_TRIANGLES)for(int i=0;i+2<count;i+=3)pc_surface_curve_triangle(v+i,v+i+1,v+i+2);
+    if(prim==GX_QUADS)for(int i=0;i+3<count;i+=4){pc_surface_curve_triangle(v+i,v+i+1,v+i+2);pc_surface_curve_triangle(v+i,v+i+2,v+i+3);}
+    if(prim==GX_TRIANGLESTRIP)for(int i=0;i+2<count;i++)pc_surface_curve_triangle(v+i+(i&1),v+i+1-(i&1),v+i+2);
+    if(prim==GX_TRIANGLEFAN)for(int i=1;i+1<count;i++)pc_surface_curve_triangle(v,v+i,v+i+1);
+    pc_surface_curve_submit();
+    return 1;
+}

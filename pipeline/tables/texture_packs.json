@@ -1,0 +1,38 @@
+[
+ {
+  "name": "3ds_apple_trial",
+  "src": "_outer/texture_pack/3ds_apple_trial"
+ },
+ {
+  "name": "3ds_holes",
+  "src": "_outer/texture_pack/3ds_holes"
+ },
+ {
+  "name": "3ds_interiors",
+  "src": "_outer/texture_pack/3ds_interiors"
+ },
+ {
+  "name": "3ds_mailbox",
+  "src": "texture_pack_staging/3ds_mailbox"
+ },
+ {
+  "name": "gc_shirts_hd",
+  "src": "_outer/texture_pack/gc_shirts_hd"
+ },
+ {
+  "name": "gc_station_hd",
+  "src": "_outer/texture_pack/gc_station_hd"
+ },
+ {
+  "name": "gc_villager_houses",
+  "src": "texture_pack_staging/gc_villager_houses"
+ },
+ {
+  "name": "nl_faces",
+  "src": "texture_pack_staging/nl_faces"
+ },
+ {
+  "name": "shop_signs",
+  "src": "texture_pack_staging/shop_signs"
+ }
+]

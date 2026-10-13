@@ -1,0 +1,123 @@
+#define PC_SHADOW_CLIFF_STEP 28.0f
+/* Per-instance donor shadow ground conformance. CPU caches never own graph
+ * pointers: each submitted mesh still lives in this frame's graph arena. */
+enum { PC_SHADOW_VERTS=81, PC_SHADOW_CACHE_SIZE=512, PC_SHADOW_CELL_CACHE_SIZE=4096 };
+typedef struct {
+    int valid,ux,uz,frame; unsigned signature;
+} PC_ShadowCellCache;
+typedef struct {
+    int valid,minx,maxx,minz,maxz,fit,used_frame;
+    unsigned terrain_signature;
+    const Gfx* dl;
+    MtxF matrix;
+    Vtx source[4],vertices[PC_SHADOW_VERTS];
+} PC_ShadowGroundCache;
+static PC_ShadowCellCache pc_shadow_cells[PC_SHADOW_CELL_CACHE_SIZE];
+static PC_ShadowGroundCache pc_shadow_grids[PC_SHADOW_CACHE_SIZE];
+static unsigned pc_shadow_hash_bytes(unsigned hash,const void* bytes,int count) {
+    const unsigned char* p=(const unsigned char*)bytes;
+    while(count--){hash^=*p++;hash*=16777619u;}
+    return hash;
+}
+static unsigned pc_shadow_cell_signature(GRAPH* graph,int ux,int uz) {
+    unsigned key=((unsigned)ux*73856093u)^((unsigned)uz*19349663u);
+    PC_ShadowCellCache* c=&pc_shadow_cells[key&(PC_SHADOW_CELL_CACHE_SIZE-1)];
+    if(!c->valid || c->frame!=graph->frame_counter || c->ux!=ux || c->uz!=uz) {
+        mCoBG_Collision_u* col=mFI_UtNum2UtCol(ux,uz);
+        float base=mFI_UtNum2BaseHeight(ux,uz);
+        int keep=mFI_UtNum2UtKeepH(ux,uz);
+        unsigned h=col?col->raw:0;
+        h=pc_shadow_hash_bytes(h,&base,sizeof(base));
+        h=pc_shadow_hash_bytes(h,&keep,sizeof(keep));
+        c->valid=1;c->frame=graph->frame_counter;c->ux=ux;c->uz=uz;c->signature=h;
+    }
+    return c->signature;
+}
+static unsigned pc_shadow_terrain_signature(GRAPH* graph,PC_ShadowGroundCache* c) {
+    unsigned h=2166136261u;int x,z;
+    for(z=c->minz;z<=c->maxz;z++)for(x=c->minx;x<=c->maxx;x++) {
+        unsigned value=pc_shadow_cell_signature(graph,x,z);
+        h=pc_shadow_hash_bytes(h,&value,sizeof(value));
+    }
+    return h;
+}
+static PC_ShadowGroundCache* pc_shadow_ground_lookup(GRAPH* graph,const Vtx* source,const MtxF* matrix,const Gfx* dl,int fit,int* hit) {
+    unsigned h=pc_shadow_hash_bytes(2166136261u,matrix,sizeof(*matrix));
+    PC_ShadowGroundCache* c;
+    h=pc_shadow_hash_bytes(h,source,sizeof(Vtx)*4);
+    h=pc_shadow_hash_bytes(h,&dl,sizeof(dl));
+    h=pc_shadow_hash_bytes(h,&fit,sizeof(fit));
+    /* Four ways prevent two stationary instances from evicting one another
+     * and triggering all 81 ground queries on every frame. */
+    {
+        int set=(h&((PC_SHADOW_CACHE_SIZE/4)-1))*4,way,matched=0;
+        c=&pc_shadow_grids[set];
+        for(way=0;way<4;way++) {
+            PC_ShadowGroundCache* candidate=&pc_shadow_grids[set+way];
+            if(candidate->valid && candidate->dl==dl && candidate->fit==fit &&
+               !memcmp(&candidate->matrix,matrix,sizeof(*matrix)) && !memcmp(candidate->source,source,sizeof(Vtx)*4)) {
+                c=candidate;matched=1;break;
+            }
+            if(!candidate->valid || (c->valid && candidate->used_frame<c->used_frame))c=candidate;
+        }
+        *hit=matched && c->terrain_signature==pc_shadow_terrain_signature(graph,c);
+    }
+    c->used_frame=graph->frame_counter;
+    if(!*hit) {
+        c->valid=0;c->dl=dl;c->fit=fit;c->matrix=*matrix;
+        memcpy(c->source,source,sizeof(Vtx)*4);
+    }
+    return c;
+}
+static short pc_shadow_local_short(float value) {
+    if(value>32767.0f)value=32767.0f;
+    if(value< -32768.0f)value=-32768.0f;
+    return (short)(value>=0?value+0.5f:value-0.5f);
+}
+static void pc_shadow_ground_store(GRAPH* graph,PC_ShadowGroundCache* c,Vtx* vertices,const MtxF* m) {
+    float det=m->xx*(m->yy*m->zz-m->yz*m->zy)-m->xy*(m->yx*m->zz-m->yz*m->zx)+m->xz*(m->yx*m->zy-m->yy*m->zx);
+    float ix,iy,iz,ref_ground;int i,maxx=mFI_GetBlockXMax()*16-1,maxz=mFI_GetBlockZMax()*16-1;
+    if(fabsf(det)<0.000000000001f)return;
+    /* Inverse transform of world (0,deltaY,0), retaining world X/Z even for
+     * a rotated single-item matrix. Native collision and tree position stay. */
+    ix=(m->xz*m->zy-m->xy*m->zz)/det;
+    iy=(m->xx*m->zz-m->xz*m->zx)/det;
+    iz=(m->xy*m->zx-m->xx*m->zy)/det;
+    c->minx=maxx;c->maxx=0;c->minz=maxz;c->maxz=0;
+    {
+        /* Reference height: the ground under the item itself. Grid points that land on a cliff top or past a cliff
+         * edge (a step of cliff size) used to be lifted onto the wall, so shadows climbed cliff faces. They now stay
+         * at the item's level and fade out instead. */
+        xyz_t origin;int oux,ouz;
+        origin.x=m->xw;origin.y=m->yw;origin.z=m->zw;
+        ref_ground=-100000.0f;
+        mFI_Wpos2UtNum(&oux,&ouz,origin);
+        if(oux>=0 && ouz>=0 && oux<=maxx && ouz<=maxz) {
+            float g=mCoBG_GetShadowBgY_AngleS_FromWpos(NULL,origin,0.0f);
+            if(g> -10000.0f && g<10000.0f) ref_ground=g;
+        }
+    }
+    for(i=0;i<PC_SHADOW_VERTS;i++) {
+        Vtx* v=&vertices[i];float x=v->v.ob[0],y=v->v.ob[1],z=v->v.ob[2];xyz_t world;int ux,uz;
+        world.x=m->xx*x+m->xy*y+m->xz*z+m->xw;
+        world.y=m->yx*x+m->yy*y+m->yz*z+m->yw;
+        world.z=m->zx*x+m->zy*y+m->zz*z+m->zw;
+        mFI_Wpos2UtNum(&ux,&uz,world);
+        if(ux<0 || uz<0 || ux>maxx || uz>maxz)continue;
+        if(ux<c->minx)c->minx=ux;if(ux>c->maxx)c->maxx=ux;
+        if(uz<c->minz)c->minz=uz;if(uz>c->maxz)c->maxz=uz;
+        float ground=mCoBG_GetShadowBgY_AngleS_FromWpos(NULL,world,0.0f);
+        if(ground> -10000.0f && ground<10000.0f) {
+            float dy;
+            if(ref_ground>-10000.0f && fabsf(ground-ref_ground)>PC_SHADOW_CLIFF_STEP) {
+                ground=ref_ground;v->v.cn[3]=0;
+            }
+            dy=ground+0.15f-world.y;
+            v->v.ob[0]=pc_shadow_local_short(x+ix*dy);
+            v->v.ob[1]=pc_shadow_local_short(y+iy*dy);
+            v->v.ob[2]=pc_shadow_local_short(z+iz*dy);
+        }
+    }
+    memcpy(c->vertices,vertices,sizeof(c->vertices));
+    c->terrain_signature=pc_shadow_terrain_signature(graph,c);c->valid=1;
+}

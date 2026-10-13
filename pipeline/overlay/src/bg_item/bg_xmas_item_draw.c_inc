@@ -1,0 +1,67 @@
+static void bXI_actor_draw(ACTOR* actorx, GAME* game) {
+    BG_XMAS_ITEM_ACTOR* bg_item = (BG_XMAS_ITEM_ACTOR*)actorx;
+    GAME_PLAY* play = (GAME_PLAY*)game;
+
+    bg_item_common_draw(play, &bg_item->common, draw_part_table_a);
+}
+
+static void bXI_draw_loop_type1_xtree(GRAPH* graph, Gfx** gfx_pp, bg_item_draw_list_c* draw_list,
+                                      bg_item_draw_pos_c* draw_pos, Gfx** display_list_table) {
+    Gfx* dl = display_list_table[draw_list->mat_idx];
+
+#ifdef TARGET_PC
+    extern int g_pc_tree_world, g_pc_cedar_world;
+    extern Gfx* pc_cedar_lights_mesh(int part);
+    extern int pc_tree_has_shake_effect(float x, float z);
+    /* This callback receives only native-selected decorated trees. Preserve
+     * its date/subset and blink state; replace the cedar overlay alone. */
+    if (g_pc_tree_world && g_pc_cedar_world && dl == obj_x_ceder5_lightT_gfx_model) {
+        /* The cedar list emits leaves/trunk first. Keep the additive overlay
+         * in that caller's draw stream so its matrix and render context agree. */
+        while (draw_pos->next_add_cnt != 256) {
+            if (!draw_pos->cull_flag && !pc_tree_has_shake_effect(draw_pos->mtxf.xw, draw_pos->mtxf.zw)) {
+                bg_item_idx_info_c* info = (bg_item_idx_info_c*)draw_pos->_04;
+                MtxF matrix = draw_pos->mtxf;
+                matrix.yw -= 4.0f; /* Same render-only root inset as canopy. */
+                Matrix_put(&matrix);
+                gSPMatrix((*gfx_pp)++, _Matrix_to_Mtx_new(graph), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gDPSetPrimColor((*gfx_pp)++, 0, 128, info->v1 == 1 ? 100 : 255,
+                    info->v1 == 2 ? 100 : 255, info->v1 == 0 ? 100 : 255, 255);
+                gSPDisplayList((*gfx_pp)++, pc_cedar_lights_mesh(0));
+            }
+            draw_pos += draw_pos->next_add_cnt;
+        }
+        *gfx_pp = texture_z_light_fog_prim_bb_pal_opa(*gfx_pp);
+        return;
+    }
+#endif
+
+    gSPDisplayList((*gfx_pp)++, display_list_table[draw_list->gfx_idx]);
+
+    while (draw_pos->next_add_cnt != 256) {
+        if (draw_pos->cull_flag == FALSE) {
+            bg_item_idx_info_c* idx_info;
+
+            Matrix_put(&draw_pos->mtxf);
+            gSPMatrix((*gfx_pp)++, _Matrix_to_Mtx_new(graph), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            idx_info = (bg_item_idx_info_c*)draw_pos->_04;
+
+            if (idx_info->v1 == 0) {
+                gDPSetPrimColor((*gfx_pp)++, 0, 128, 255, 255, 100, 255);
+            } else if (idx_info->v1 == 1) {
+                gDPSetPrimColor((*gfx_pp)++, 0, 128, 100, 255, 255, 255);
+            } else {
+                gDPSetPrimColor((*gfx_pp)++, 0, 128, 255, 100, 255, 255);
+            }
+
+            gSPDisplayList((*gfx_pp)++, dl);
+        }
+
+        draw_pos += draw_pos->next_add_cnt;
+    }
+
+    gDPPipeSync((*gfx_pp)++);
+    gDPSetPrimColor((*gfx_pp)++, 0, 128, 255, 255, 255, 255);
+    gSPLoadGeometryMode((*gfx_pp)++, G_ZBUFFER | G_SHADE | G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
+    gDPSetCombineLERP((*gfx_pp)++, TEXEL0, 0, SHADE, 0, 0, 0, 0, TEXEL0, PRIMITIVE, 0, COMBINED, 0, 0, 0, 0, COMBINED);
+}

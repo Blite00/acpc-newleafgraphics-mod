@@ -1,0 +1,1453 @@
+{
+ "sum_classicchair01": "rmk_chc_chairS",
+ "sum_classicchest02": "rmk_chc_byuro",
+ "sum_classictable01": "rmk_chc_tableS",
+ "sum_classicwardrope01": "rmk_chc_chestA",
+ "sum_kitchair01": "rmk_ryl_chairS",
+ "sum_liccachair": "rmk_lov_chairS",
+ "sum_bookcht01": "rmk_ryl_bookshelf",
+ "sum_cont_cab01": "rmk_cnt_shelf",
+ "sum_cont_chest01": "rmk_cnt_bookshelf",
+ "sum_cont_chair01": "rmk_cnt_chairS01",
+ "sum_cont_bed01": "rmk_cnt_bedS",
+ "sum_asi_chair02": "rmk_asi_chairS",
+ "sum_asi_table01": "rmk_asi_tableM",
+ "sum_bla_table01": "rmk_mnc_tableM01",
+ "sum_blue_bed01": "rmk_blu_bedS",
+ "sum_blue_chair01": "rmk_blu_chairS",
+ "sum_blue_chest01": "rmk_blu_chestB",
+ "sum_gre_bed01": "rmk_grn_bedS",
+ "sum_gre_chair02": "rmk_grn_chairS",
+ "sum_gre_table01": "rmk_grn_tableL",
+ "sum_log_bed01": "rmk_log_bedS",
+ "sum_log_chest03": "rmk_log_bookshelf",
+ "sum_hal_bed01": "hwn_bedS",
+ "sum_hal_chair01": "hwn_chairS",
+ "sum_hal_table01": "hwn_tableL",
+ "sum_asi_bed01": {
+  "nl": "rmk_asi_bedW",
+  "tint": {
+   "fabric_00": [
+    168,
+    157,
+    73
+   ]
+  }
+ },
+ "sum_ratan_table01": "rmk_rst_tableM",
+ "sum_ratan_isu02": "rmk_rst_chairS02",
+ "sum_ratan_chest03": "rmk_rst_bookshelf",
+ "sum_gre_desk01": "rmk_grn_desk",
+ "sum_bla_chair02": "rmk_mnc_chairS",
+ "sum_log_chair03": "rmk_log_chairS01",
+ "sum_whi_bed01": "rmk_ryl_bedW",
+ "sum_x_chair01": "xms_chairS",
+ "sum_x_bed01": "xms_bedS",
+ "sum_x_table01": "xms_tableL",
+ "tak_snowisu": "snw_chairS",
+ "ari_isu01": "rmk_flg_chairS",
+ "ari_table01": "flg_tableS",
+ "ari_reizou01": "oth_iceA_chestB",
+ "ari_kitchen01": "oth_range",
+ "sum_sofe03": "oth_WchairL",
+ "sum_doll02": "rmk_ber_bearL",
+ "sum_doll03": "rmk_ber_bearM",
+ "sum_doll04": "rmk_ber_bearS",
+ "sum_clchair02": "oth_RchairS",
+ "sum_desk01": "std_desk",
+ "sum_globe01": "std_earth",
+ "sum_kittable01": "rmk_ryl_tableM",
+ "sum_totemp01": "tpl_tpl02",
+ "sum_totemp02": "tpl_tpl04",
+ "sum_totemp03": "tpl_tpl01",
+ "sum_totemp04": "tpl_tpl03",
+ "sum_ratan_isu01": "rmk_rst_chairS01",
+ "sum_oldsofa01": "rmk_chc_chairL",
+ "sum_liccatable": "rmk_lov_tableS",
+ "sum_liccalanp": "rmk_lov_lamp",
+ "sum_liccakitchen": "rmk_lov_kitchen",
+ "sum_chair01": "rmk_std_chairS",
+ "sum_cont_sofa01": "rmk_cnt_chairL",
+ "sum_cont_sofa02": "rmk_cnt_chairS02",
+ "sum_cont_table01": "rmk_cnt_tableM",
+ "sum_cont_table02": "rmk_cnt_tableL",
+ "sum_comp01": "oth_computer",
+ "kob_jimudesk": "ofc_tableM",
+ "sum_shoukaki": "oth_extinguisher",
+ "kob_pipeisu": "rmk_sch_pipe_chairS",
+ "sum_sabo01": "cct_long",
+ "sum_sabo02": "cct_sphere",
+ "sum_touro02": "jgd_lantern",
+ "kob_jimuisu": "ofc_chairS",
+ "kob_getabako1": "sch_shoesbox",
+ "kob_rika_desk": "sch_sciencetable",
+ "sum_taru01": "pir_barrel01",
+ "sum_taru02": "pir_barrel02",
+ "kob_tobibako": "sch_baultingbox",
+ "kon_tukue": "oth_ska_tableM",
+ "kon_tubo": "jar_jar_seiji",
+ "sum_suberi01": "bab_slide",
+ "sum_wc02": "rmk_oth_wc1",
+ "tak_table02": "rmk_pin_tableL",
+ "kon_tubo2": "jar_jar_broun",
+ "kon_tubo3": "jar_jar_red",
+ "sum_billiads": "oth_billiads",
+ "sum_fruitbed01": "oth_bedS",
+ "sum_fruittable01": "ctr_r_tableS",
+ "sum_asi_chair01": "rmk_asi_chairL",
+ "sum_asi_chest01": "rmk_asi_trunk",
+ "sum_asi_lanp01": "rmk_asi_lamp",
+ "sum_asi_screen01": "rmk_asi_screen",
+ "sum_bla_chest02": "rmk_mnc_bookshelf",
+ "sum_bla_desk01": "rmk_mnc_tableM02",
+ "sum_bla_sofa02": "rmk_mnc_chairL",
+ "sum_blue_bench01": "rmk_blu_chairL",
+ "sum_gre_chair01": "rmk_grn_chairL",
+ "sum_gre_chest01": "rmk_grn_rack",
+ "sum_gre_counter01": "rmk_grn_counter",
+ "sum_log_chair01": "rmk_log_chairL",
+ "sum_log_chair02": "rmk_log_chairS02",
+ "sum_log_table01": "rmk_log_tableM",
+ "sum_pl_aloe01": {
+  "nl": "plt_aloe",
+  "yaw": 90.0
+ },
+ "sum_pl_ananas": "plt_ananas",
+ "sum_pl_cocos": "plt_palm",
+ "sum_pl_compacta": "plt_sansevieria",
+ "sum_pl_dracaena": "plt_happy",
+ "sum_pl_gomunoki": "plt_rubber",
+ "sum_pl_pothos": {
+  "nl": "plt_pothos",
+  "yaw": 90.0
+ },
+ "sum_pl_yamayasi": {
+  "nl": "plt_yamadori",
+  "yaw": 90.0
+ },
+ "sum_fruittable02": "ctr_g_tableS",
+ "sum_pl_benjyami": "plt_benjamin",
+ "sum_pl_draca02": "plt_dracaena",
+ "sum_pl_kuroton": "plt_croton",
+ "sum_pl_pakila": "plt_pachira",
+ "sum_pl_hirasabo": "cct_smooth",
+ "sum_bon_matu02": "bop_whitepine",
+ "sum_bon_matu03": "bop_redpine",
+ "sum_bon_ume": "bon_apricot",
+ "tak_cone01": "cst_weightP",
+ "tak_cone03": "cst_redP",
+ "sum_bon_momiji": "bon_maple",
+ "sum_bon_pira": "bon_pyracantha",
+ "sum_bon_turu": "bon_bittersweet",
+ "tak_tekkin": "cst_ironframe",
+ "sum_fruitchair03": "rmk_wtm_chairS",
+ "sum_fruittable03": "rmk_wtm_tableL",
+ "kon_gomi03": "oth_trash_c",
+ "tak_neko": "cst_handcart",
+ "tak_yaji": "cst_arrowsign",
+ "sum_hal_sofa01": "hwn_chairL",
+ "tak_ufo": {
+  "nl": "uvs_ufo",
+  "skel": "int_tak_ufo"
+ },
+ "sum_asi_table02": "rmk_asi_tableS",
+ "tak_asteroid1": {
+  "nl": "uvs_meteo",
+  "skel": "int_tak_asteroid1"
+ },
+ "sum_ratan_lanp": "rmk_rst_lamp",
+ "kon_taiju": {
+  "nl": "hsp_scale",
+  "yaw": 90.0
+ },
+ "sum_ratan_screen": "rmk_rst_screen",
+ "sum_bla_table02": "rmk_mnc_tableS",
+ "tak_shuttle": "uvs_shuttle",
+ "sum_whi_sofa01": "rmk_ryl_chairL",
+ "sum_uwa_cup01": "oth_teaset",
+ "sum_uwa_vase01": "oth_gerbera",
+ "sum_uwa_vase02": "oth_sunflower",
+ "sum_uwa_vase03": "oth_narcissus",
+ "sum_x_lanp": "xms_lamp",
+ "sum_x_chest03": "xms_bookshelf",
+ "sum_x_sofa01": "xms_chairL",
+ "kon_xtree02": "oth_Xmas_L",
+ "nog_xtree": "oth_Xmas_S",
+ "nog_tri_bed01": "rmk_col_bedS",
+ "nog_tri_table01": "rmk_col_tableL",
+ "nog_tri_sofa01": "rmk_col_chairL",
+ "nog_tri_chair01": "rmk_col_chairS",
+ "nog_tri_rack01": "rmk_col_bookshelf",
+ "sum_kokuban": "rmk_sch_blackboard",
+ "sum_baketu": "sch_cleantools",
+ "kon_snowfreezer": "snw_freezer",
+ "kon_snowtable": "snw_tableL",
+ "kon_snowsofa": "snw_chairL",
+ "ike_jny_afmen01": "jhn_mask",
+ "ike_jny_moai01": "jhn_moai",
+ "ike_jny_gojyu01": "jhn_gojyu",
+ "ike_jny_pisa01": "jhn_pisa",
+ "sum_guitar01": "gtr_Agtr01",
+ "sum_guitar02": "gtr_Agtr02",
+ "sum_guitar03": "rmk_gtr_Egtr01",
+ "sum_taiko01": "oth_jdrum",
+ "sum_stereo01": "msc_retro",
+ "sum_biwa01": "oth_lute",
+ "sum_conga01": "pcs_conga",
+ "sum_conpo01": "msc_good",
+ "sum_timpani01": "pcs_tinpani",
+ "sum_harp": "oth_harp",
+ "sum_asi_taiko": "pcs_jb",
+ "sum_viola01": "vio_viola",
+ "sum_bass01": "vio_bass",
+ "sum_cello01": "vio_cello",
+ "sum_piano01": "rmk_oth_piano_b",
+ "sum_chikuon01": "msc_recorderN",
+ "sum_chikuon02": "msc_recorderS",
+ "sum_jukebox": "msc_jukebox",
+ "sum_conpo02": "msc_pro",
+ "sum_stereo02": "msc_high_c",
+ "sum_x_piano": "xms_piano",
+ "sum_saiconpo": "msc_dice",
+ "sum_casse01": "msc_deck",
+ "nog_tri_audio01": "rmk_col_audioM",
+ "ike_pst_pig01": "rmk_oth_pigbank",
+ "sum_hal_chest02": {
+  "nl": "hwn_chestB",
+  "skel": "int_sum_hal_chest02"
+ },
+ "sum_blue_bureau01": {
+  "nl": "rmk_blu_chestB",
+  "skel": "int_sum_blue_bureau01"
+ },
+ "kob_locker1": {
+  "nl": "ofc_chestB",
+  "skel": "int_kob_locker1"
+ },
+ "sum_x_chest01": {
+  "nl": "xms_chestC",
+  "skel": "int_sum_x_chest01"
+ },
+ "sum_whi_chest02": {
+  "nl": "rmk_ryl_chestC",
+  "skel": "int_sum_whi_chest02"
+ },
+ "sum_ratan_chest02": {
+  "nl": "rmk_rst_chestC",
+  "skel": "int_sum_ratan_chest02"
+ },
+ "sum_log_chest02": {
+  "nl": "rmk_log_chestC",
+  "skel": "int_sum_log_chest02"
+ },
+ "sum_liccachest": {
+  "nl": "rmk_lov_chestC",
+  "skel": "int_sum_liccachest"
+ },
+ "sum_gre_chest02": {
+  "nl": "rmk_grn_chestC",
+  "skel": "int_sum_gre_chest02"
+ },
+ "sum_fruitchest03": {
+  "nl": "per_chestC",
+  "skel": "int_sum_fruitchest03"
+ },
+ "sum_cont_chest02": {
+  "nl": "rmk_cnt_chestC",
+  "skel": "int_sum_cont_chest02"
+ },
+ "sum_blue_cab01": {
+  "nl": "rmk_blu_chestC",
+  "skel": "int_sum_blue_cab01"
+ },
+ "sum_bla_chest03": {
+  "nl": "rmk_mnc_chestC",
+  "skel": "int_sum_bla_chest03"
+ },
+ "sum_asi_chest03": {
+  "nl": "rmk_asi_chestC",
+  "skel": "int_sum_asi_chest03"
+ },
+ "sum_x_chest02": {
+  "nl": "xms_chestA",
+  "skel": "int_sum_x_chest02"
+ },
+ "sum_log_chest01": {
+  "nl": "rmk_log_chestA",
+  "skel": "int_sum_log_chest01"
+ },
+ "sum_liccalowchest": {
+  "nl": "rmk_lov_chestA",
+  "skel": "int_sum_liccalowchest"
+ },
+ "sum_hal_chest03": {
+  "nl": "hwn_chestA",
+  "skel": "int_sum_hal_chest03"
+ },
+ "sum_gre_chest03": {
+  "nl": "rmk_grn_chestA",
+  "skel": "int_sum_gre_chest03"
+ },
+ "sum_fruitchest01": {
+  "nl": "per_chestA",
+  "skel": "int_sum_fruitchest01"
+ },
+ "sum_cont_chest03": {
+  "nl": "rmk_cnt_chestA",
+  "skel": "int_sum_cont_chest03"
+ },
+ "sum_blue_lowchest01": {
+  "nl": "rmk_blu_chestA",
+  "skel": "int_sum_blue_lowchest01"
+ },
+ "sum_bla_chest01": {
+  "nl": "rmk_mnc_chestA",
+  "skel": "int_sum_bla_chest01"
+ },
+ "nog_tri_chest01": {
+  "nl": "rmk_col_chestA",
+  "skel": "int_nog_tri_chest01"
+ },
+ "nog_tri_chest02": {
+  "nl": "rmk_col_chestC",
+  "skel": "int_nog_tri_chest02"
+ },
+ "nog_tri_chest03": {
+  "nl": "rmk_col_chestB",
+  "skel": "int_nog_tri_chest03"
+ },
+ "sum_kisha": {
+  "nl": "bab_railroad",
+  "skel": "int_sum_kisha"
+ },
+ "sum_okiagari01": {
+  "nl": "rmk_bab_tumbler",
+  "skel": "int_sum_okiagari01"
+ },
+ "tak_metro": {
+  "nl": "oth_metronome",
+  "yaw": 90.0,
+  "skel": "int_tak_metro"
+ },
+ "kon_sisiodosi": {
+  "nl": "jgd_sisiodosi",
+  "skel": "int_kon_sisiodosi"
+ },
+ "tak_eisei": {
+  "nl": "uvs_satellite",
+  "skel": "int_tak_eisei"
+ },
+ "sum_reco01": {
+  "nl": "msc_tape",
+  "skel": "int_sum_reco01"
+ },
+ "kon_snowbox": {
+  "nl": "snw_chestB",
+  "skel": "int_kon_snowbox"
+ },
+ "sum_oldclk01": {
+  "nl": "rmk_chc_clockP",
+  "skel": "int_sum_oldclk01"
+ },
+ "sum_hal_clk01": {
+  "nl": "hwn_clockN",
+  "skel": "int_sum_hal_clk01"
+ },
+ "nog_tri_clock01": {
+  "nl": "rmk_col_clockN",
+  "skel": "int_nog_tri_clock01"
+ },
+ "sum_tv01": {
+  "nl": "oth_retro_tv",
+  "screen": "tv.0"
+ },
+ "sum_tv02": {
+  "nl": "oth_wide_tv",
+  "screen": "tv.0"
+ },
+ "kon_snowtv": {
+  "nl": "snw_tv",
+  "screen": "tv.0"
+ },
+ "sum_doll01": {
+  "nl": "oth_hinadolls",
+  "blank": [
+   "int_sum_doll01_offT_model"
+  ]
+ },
+ "sum_stove01": {
+  "nl": "oth_stove",
+  "blank": [
+   "int_sum_stove_offT_model"
+  ]
+ },
+ "sum_liccamirror": {
+  "nl": "rmk_lov_dresser",
+  "blank": [
+   "int_sum_liccamirror_env_model"
+  ]
+ },
+ "sum_gre_lanp01": {
+  "nl": "rmk_grn_lamp",
+  "blank": [
+   "int_sum_gre_lanp01_offT_model"
+  ]
+ },
+ "sum_ratan_mirror": {
+  "nl": "rmk_rst_dresser",
+  "blank": [
+   "int_sum_ratan_mirror_on_model"
+  ]
+ },
+ "sum_hal_mirror01": {
+  "nl": "hwn_dresser",
+  "blank": [
+   "int_sum_hal_mirror01_on_model"
+  ]
+ },
+ "sum_whi_mirror": {
+  "nl": "rmk_ryl_dresser",
+  "blank": [
+   "int_sum_whi_mirror_on_model"
+  ]
+ },
+ "sum_whi_lanp": {
+  "nl": "rmk_ryl_lamp",
+  "blank": [
+   "int_sum_whi_lanp_offT_model"
+  ]
+ },
+ "sum_bla_lanp": {
+  "nl": "rmk_mnc_lamp",
+  "blank": [
+   "int_sum_bla_lanp_off_model",
+   "int_sum_bla_lanp_offT_model"
+  ]
+ },
+ "sum_monshiro": {
+  "nl": "ins_monsiro",
+  "skel": "int_sum_monshiro"
+ },
+ "sum_monki": {
+  "nl": "ins_monki",
+  "skel": "int_sum_monki"
+ },
+ "sum_shiokara": {
+  "nl": "ins_akane",
+  "skel": "int_sum_shiokara"
+ },
+ "sum_akiakane": {
+  "nl": "ins_akane",
+  "skel": "int_sum_akiakane"
+ },
+ "sum_ginyanma": {
+  "nl": "ins_ginyan",
+  "skel": "int_sum_ginyanma"
+ },
+ "sum_oniyanma": {
+  "nl": "ins_oniyan",
+  "yaw": 90.0,
+  "skel": "int_sum_oniyanma"
+ },
+ "sum_kanabun": {
+  "nl": "ins_kogane",
+  "skel": "int_sum_kanabun"
+ },
+ "sum_hirata": {
+  "nl": "ins_hosokwa",
+  "yaw": 90.0,
+  "skel": "int_sum_hirata"
+ },
+ "sum_tamamushi": {
+  "nl": "ins_tama",
+  "skel": "int_sum_tamamushi"
+ },
+ "sum_funa": {
+  "nl": "fsh_funa",
+  "skel": "int_sum_funa"
+ },
+ "sum_hera": {
+  "nl": "fsh_funa",
+  "skel": "int_sum_hera"
+ },
+ "sum_koi": {
+  "nl": "fsh_koi",
+  "skel": "int_sum_koi"
+ },
+ "sum_nisiki": {
+  "nl": "fsh_nishiki",
+  "skel": "int_sum_nisiki"
+ },
+ "sum_namazu": {
+  "nl": "fsh_namazu",
+  "yaw": 90.0,
+  "skel": "int_sum_namazu"
+ },
+ "sum_bass": {
+  "nl": "fsh_black",
+  "skel": "int_sum_bass"
+ },
+ "sum_bassm": {
+  "nl": "fsh_black",
+  "skel": "int_sum_bassm"
+ },
+ "sum_bassl": {
+  "nl": "fsh_black",
+  "skel": "int_sum_bassl"
+ },
+ "sum_gill": {
+  "nl": "fsh_blue",
+  "skel": "int_sum_gill"
+ },
+ "sum_oonamazu": {
+  "nl": "fsh_namazu",
+  "yaw": 90.0,
+  "skel": "int_sum_oonamazu"
+ },
+ "sum_nigoi": {
+  "nl": "fsh_nigoi",
+  "yaw": 90.0,
+  "skel": "int_sum_nigoi"
+ },
+ "sum_ugui": {
+  "nl": "fsh_ugui",
+  "skel": "int_sum_ugui"
+ },
+ "sum_oikawa": {
+  "nl": "fsh_oikawa",
+  "skel": "int_sum_oikawa"
+ },
+ "sum_tanago": {
+  "nl": "fsh_tanago",
+  "yaw": 90.0,
+  "skel": "int_sum_tanago"
+ },
+ "sum_dojyo": {
+  "nl": "fsh_dojou",
+  "skel": "int_sum_dojyo"
+ },
+ "sum_wakasagi": {
+  "nl": "fsh_wakasagi",
+  "skel": "int_sum_wakasagi"
+ },
+ "sum_ayu": {
+  "nl": "fsh_ayu",
+  "yaw": 90.0,
+  "skel": "int_sum_ayu"
+ },
+ "sum_yamame": {
+  "nl": "fsh_yamame",
+  "yaw": 90.0,
+  "skel": "int_sum_yamame"
+ },
+ "sum_iwana": {
+  "nl": "fsh_ooiwana",
+  "yaw": 90.0,
+  "skel": "int_sum_iwana"
+ },
+ "sum_niji": {
+  "nl": "fsh_nijimasu",
+  "skel": "int_sum_niji"
+ },
+ "sum_sake": {
+  "nl": "fsh_sake",
+  "skel": "int_sum_sake"
+ },
+ "sum_kingyo": {
+  "nl": "fsh_kingyo",
+  "yaw": 90.0,
+  "skel": "int_sum_kingyo"
+ },
+ "sum_pirania": {
+  "nl": "fsh_pirania",
+  "yaw": 90.0,
+  "skel": "int_sum_pirania"
+ },
+ "sum_aroana": {
+  "nl": "fsh_arowana",
+  "skel": "int_sum_aroana"
+ },
+ "sum_donko": {
+  "nl": "fsh_donko",
+  "skel": "int_sum_donko"
+ },
+ "sum_angel": {
+  "nl": "fsh_angel",
+  "skel": "int_sum_angel"
+ },
+ "sum_gupi": {
+  "nl": "fsh_guppi",
+  "skel": "int_sum_gupi"
+ },
+ "sum_demekin": {
+  "nl": "fsh_demekin",
+  "skel": "int_sum_demekin"
+ },
+ "sum_golfbag03": "rmk_glf_golfbag_b",
+ "sum_takkyu": "oth_takkyu",
+ "ike_jny_makada01": "oth_chocolate",
+ "din_amber": "fos_amber",
+ "din_ammonite": "fos_ammo",
+ "din_bront_body": "din_apt_b",
+ "din_bront_head": "din_apt_a",
+ "din_bront_tail": {
+  "nl": "din_apt_c",
+  "yaw": 90.0
+ },
+ "din_egg": "fos_egg",
+ "din_hutaba_body": {
+  "nl": "din_suz_c",
+  "yaw": 90.0
+ },
+ "din_hutaba_head": {
+  "nl": "din_suz_a",
+  "yaw": 90.0
+ },
+ "din_hutaba_neck": "din_suz_b",
+ "din_mammoth_body": "din_mam_b",
+ "din_mammoth_head": "din_mam_a",
+ "din_ptera_head": "din_pte_a",
+ "din_stego_body": "din_ste_b",
+ "din_stego_head": "din_ste_a",
+ "din_stego_tail": "din_ste_c",
+ "din_trex_body": "din_trex_b",
+ "din_trex_head": "din_trex_a",
+ "din_trex_tail": "din_trex_c",
+ "din_trikera_body": "din_tri_b",
+ "din_trikera_head": "din_tri_a",
+ "din_trikera_tail": {
+  "nl": "din_tri_c",
+  "yaw": 90.0
+ },
+ "din_trilobite": "fos_trilo",
+ "ike_jny_hariko01": {
+  "nl": "jhn_hariko",
+  "skel": "int_ike_jny_hariko01"
+ },
+ "ike_pst_tesyu01": "oth_tissue",
+ "kob_getabako2": "sch_shoesbox",
+ "nog_amenbo": {
+  "nl": "ins_amembo",
+  "skel": "int_nog_amenbo"
+ },
+ "nog_dango": {
+  "nl": "ins_dango",
+  "skel": "int_nog_dango"
+ },
+ "nog_maimai": {
+  "nl": "ins_kata",
+  "skel": "int_nog_maimai"
+ },
+ "sum_fruitchair01": "rmk_ctr_chairS",
+ "sum_fruitchair04": "rmk_wtm_chairS",
+ "sum_fruitclk": {
+  "nl": "rmk_apl_clockN",
+  "skel": "int_sum_fruitclk"
+ },
+ "sum_higurashi": {
+  "nl": "ins_higu",
+  "skel": "int_sum_higurashi"
+ },
+ "sum_kiageha": {
+  "nl": "ins_ageha",
+  "skel": "int_sum_kiageha"
+ },
+ "sum_popchair01": "rmk_flc_chairS",
+ "sum_poptable01": "rmk_flc_tableS",
+ "sum_radio01": "rmk_msc_Wdeck",
+ "sum_sofe01": "rmk_red_chairL",
+ "sum_sofe02": "rmk_red_chairS",
+ "sum_tukutuku": {
+  "nl": "ins_tsuku",
+  "skel": "int_sum_tukutuku"
+ },
+ "ike_art_ang": "art_bravely",
+ "ike_art_fel": "art_becomecalm",
+ "ike_art_sya": "art_stylish",
+ "sum_art01": "art_famous",
+ "sum_art04": "art_goodlooking",
+ "sum_art05": "art_matchless",
+ "sum_art06": "art_intimacy",
+ "sum_art13": "art_fantastic",
+ "sum_art14": "art_splendid",
+ "sum_art15": "art_valuable",
+ "sum_col_chair03": {
+  "nl": "rmk_oth_chairS",
+  "yaw": 90.0
+ },
+ "tak_drum02": "rmk_cst_drum",
+ "sum_popchair02": {
+  "nl": "rmk_flc_chairS",
+  "variants": {
+   "base": "02"
+  }
+ },
+ "sum_popchair03": {
+  "nl": "rmk_flc_chairS",
+  "variants": {
+   "base": "01"
+  }
+ },
+ "sum_poptable02": {
+  "nl": "rmk_flc_tableS",
+  "variants": {
+   "base": "02"
+  }
+ },
+ "sum_poptable03": {
+  "nl": "rmk_flc_tableS",
+  "variants": {
+   "base": "01"
+  }
+ },
+ "sum_fruitchair02": {
+  "nl": "rmk_ctr_chairS",
+  "variants": {
+   "base": "04"
+  }
+ },
+ "sum_col_chair01": {
+  "nl": "rmk_oth_chairS",
+  "yaw": 90.0,
+  "variants": {
+   "base": "03"
+  }
+ },
+ "sum_col_chair02": {
+  "nl": "rmk_oth_chairS",
+  "yaw": 90.0,
+  "variants": {
+   "base": "01"
+  }
+ },
+ "sum_radio02": {
+  "nl": "rmk_msc_Wdeck",
+  "variants": {
+   "base": "01"
+  }
+ },
+ "hnw_common005": {
+  "nl": "hnw_bonbonM",
+  "skel": "int_hnw006"
+ },
+ "hnw_common000": {
+  "nl": "hnw_kakuT",
+  "skel": "int_hnw001"
+ },
+ "hnw_common033": {
+  "nl": "hnw_pyonT",
+  "skel": "int_hnw034"
+ },
+ "hnw_common051": {
+  "nl": "hnw_dekaL",
+  "skel": "int_hnw052"
+ },
+ "hnw_common087": {
+  "nl": "hnw_booL",
+  "skel": "int_hnw088"
+ },
+ "hnw_common115": {
+  "nl": "hnw_huwaL",
+  "skel": "int_hnw116"
+ },
+ "hnw_common001": {
+  "nl": "hnw_kakuL",
+  "skel": "int_hnw002"
+ },
+ "hnw_common002": {
+  "nl": "hnw_kakuS",
+  "skel": "int_hnw003"
+ },
+ "hnw_common003": {
+  "nl": "hnw_kakuM",
+  "skel": "int_hnw004"
+ },
+ "hnw_common004": {
+  "nl": "hnw_bonbonS",
+  "skel": "int_hnw005"
+ },
+ "hnw_common006": {
+  "nl": "hnw_bonbonL",
+  "skel": "int_hnw007"
+ },
+ "hnw_common007": {
+  "nl": "hnw_bonbonT",
+  "skel": "int_hnw008"
+ },
+ "hnw_common008": {
+  "nl": "hnw_ecoL",
+  "skel": "int_hnw009"
+ },
+ "hnw_common009": {
+  "nl": "hnw_ecoS",
+  "skel": "int_hnw010"
+ },
+ "hnw_common010": {
+  "nl": "hnw_ecoT",
+  "skel": "int_hnw011"
+ },
+ "hnw_common011": {
+  "nl": "hnw_roboS",
+  "skel": "int_hnw012"
+ },
+ "hnw_common012": {
+  "nl": "hnw_roboM",
+  "skel": "int_hnw013"
+ },
+ "hnw_common013": {
+  "nl": "hnw_roboL",
+  "skel": "int_hnw014"
+ },
+ "hnw_common014": {
+  "nl": "hnw_roboT",
+  "skel": "int_hnw015"
+ },
+ "hnw_common015": {
+  "nl": "hnw_pipopaS",
+  "skel": "int_hnw016"
+ },
+ "hnw_common016": {
+  "nl": "hnw_giroS",
+  "skel": "int_hnw017"
+ },
+ "hnw_common017": {
+  "nl": "hnw_giroL",
+  "skel": "int_hnw018"
+ },
+ "hnw_common018": {
+  "nl": "hnw_pipopaL",
+  "skel": "int_hnw019"
+ },
+ "hnw_common019": {
+  "nl": "hnw_ugaiS",
+  "skel": "int_hnw020"
+ },
+ "hnw_common020": {
+  "nl": "hnw_ugaiM",
+  "skel": "int_hnw021"
+ },
+ "hnw_common021": {
+  "nl": "hnw_ugaiT",
+  "skel": "int_hnw022"
+ },
+ "hnw_common022": {
+  "nl": "hnw_diziL",
+  "skel": "int_hnw023"
+ },
+ "hnw_common023": {
+  "nl": "hnw_diziT",
+  "skel": "int_hnw024"
+ },
+ "hnw_common024": {
+  "nl": "hnw_diziM",
+  "skel": "int_hnw025"
+ },
+ "hnw_common025": {
+  "nl": "hnw_diziS",
+  "skel": "int_hnw026"
+ },
+ "hnw_common026": {
+  "nl": "hnw_boyoM",
+  "skel": "int_hnw027"
+ },
+ "hnw_common027": {
+  "nl": "hnw_boyoS",
+  "skel": "int_hnw028"
+ },
+ "hnw_common028": {
+  "nl": "hnw_boyoL",
+  "skel": "int_hnw029"
+ },
+ "hnw_common029": {
+  "nl": "hnw_boyoT",
+  "skel": "int_hnw030"
+ },
+ "hnw_common030": {
+  "nl": "hnw_buuM",
+  "skel": "int_hnw031"
+ },
+ "hnw_common031": {
+  "nl": "hnw_buuS",
+  "skel": "int_hnw032"
+ },
+ "hnw_common032": {
+  "nl": "hnw_buuL",
+  "skel": "int_hnw033"
+ },
+ "hnw_common034": {
+  "nl": "hnw_mooL",
+  "skel": "int_hnw035"
+ },
+ "hnw_common035": {
+  "nl": "hnw_mooT",
+  "skel": "int_hnw036"
+ },
+ "hnw_common036": {
+  "nl": "hnw_kararaS",
+  "skel": "int_hnw037"
+ },
+ "hnw_common037": {
+  "nl": "hnw_kararaM",
+  "skel": "int_hnw038"
+ },
+ "hnw_common038": {
+  "nl": "hnw_brotheS",
+  "skel": "int_hnw039"
+ },
+ "hnw_common039": {
+  "nl": "hnw_brotheM",
+  "skel": "int_hnw040"
+ },
+ "hnw_common040": {
+  "nl": "hnw_brotheL",
+  "skel": "int_hnw041"
+ },
+ "hnw_common041": {
+  "nl": "hnw_brotheT",
+  "skel": "int_hnw042"
+ },
+ "hnw_common042": {
+  "nl": "hnw_garaL",
+  "skel": "int_hnw043"
+ },
+ "hnw_common043": {
+  "nl": "hnw_garaT",
+  "skel": "int_hnw044"
+ },
+ "hnw_common044": {
+  "nl": "hnw_garaM",
+  "skel": "int_hnw045"
+ },
+ "hnw_common045": {
+  "nl": "hnw_garaS",
+  "skel": "int_hnw046"
+ },
+ "hnw_common046": {
+  "nl": "hnw_tinpaS",
+  "skel": "int_hnw047"
+ },
+ "hnw_common047": {
+  "nl": "hnw_tinpaM",
+  "skel": "int_hnw048"
+ },
+ "hnw_common048": {
+  "nl": "hnw_tinpaL",
+  "skel": "int_hnw049"
+ },
+ "hnw_common049": {
+  "nl": "hnw_warpM",
+  "skel": "int_hnw050"
+ },
+ "hnw_common050": {
+  "nl": "hnw_warpL",
+  "skel": "int_hnw051"
+ },
+ "hnw_common052": {
+  "nl": "hnw_dekaM",
+  "skel": "int_hnw053"
+ },
+ "hnw_common053": {
+  "nl": "hnw_dekaS",
+  "skel": "int_hnw054"
+ },
+ "hnw_common054": {
+  "nl": "hnw_sutiL",
+  "skel": "int_hnw055"
+ },
+ "hnw_common055": {
+  "nl": "hnw_sutiT",
+  "skel": "int_hnw056"
+ },
+ "hnw_common056": {
+  "nl": "hnw_sutiS",
+  "skel": "int_hnw057"
+ },
+ "hnw_common057": {
+  "nl": "hnw_uwaS",
+  "skel": "int_hnw058"
+ },
+ "hnw_common058": {
+  "nl": "hnw_uwaL",
+  "skel": "int_hnw059"
+ },
+ "hnw_common059": {
+  "nl": "hnw_warpT2",
+  "skel": "int_hnw060"
+ },
+ "hnw_common060": {
+  "nl": "hnw_warpS",
+  "skel": "int_hnw061"
+ },
+ "hnw_common061": {
+  "nl": "hnw_bellL",
+  "skel": "int_hnw062"
+ },
+ "hnw_common062": {
+  "nl": "hnw_bellL2",
+  "skel": "int_hnw063"
+ },
+ "hnw_common063": {
+  "nl": "hnw_bellT",
+  "skel": "int_hnw064"
+ },
+ "hnw_common064": {
+  "nl": "hnw_bellM",
+  "skel": "int_hnw065"
+ },
+ "hnw_common065": {
+  "nl": "hnw_bellS",
+  "skel": "int_hnw066"
+ },
+ "hnw_common066": {
+  "nl": "hnw_bellS2",
+  "skel": "int_hnw067"
+ },
+ "hnw_common067": {
+  "nl": "hnw_bachinL",
+  "skel": "int_hnw068"
+ },
+ "hnw_common068": {
+  "nl": "hnw_bachinM",
+  "skel": "int_hnw069"
+ },
+ "hnw_common069": {
+  "nl": "hnw_bachinT",
+  "skel": "int_hnw070"
+ },
+ "hnw_common070": {
+  "nl": "hnw_bachinS",
+  "skel": "int_hnw071"
+ },
+ "hnw_common071": {
+  "nl": "hnw_geroM",
+  "skel": "int_hnw072"
+ },
+ "hnw_common072": {
+  "nl": "hnw_geroL",
+  "skel": "int_hnw073"
+ },
+ "hnw_common073": {
+  "nl": "hnw_geroT",
+  "skel": "int_hnw074"
+ },
+ "hnw_common074": {
+  "nl": "hnw_geroS",
+  "skel": "int_hnw075"
+ },
+ "hnw_common075": {
+  "nl": "hnw_karaL",
+  "skel": "int_hnw076"
+ },
+ "hnw_common076": {
+  "nl": "hnw_karaT",
+  "skel": "int_hnw077"
+ },
+ "hnw_common077": {
+  "nl": "hnw_karaM",
+  "skel": "int_hnw078"
+ },
+ "hnw_common078": {
+  "nl": "hnw_karaS",
+  "skel": "int_hnw079"
+ },
+ "hnw_common079": {
+  "nl": "hnw_ugaikoT",
+  "skel": "int_hnw080"
+ },
+ "hnw_common080": {
+  "nl": "hnw_ugaikoM",
+  "skel": "int_hnw081"
+ },
+ "hnw_common081": {
+  "nl": "hnw_ugaikoS",
+  "skel": "int_hnw082"
+ },
+ "hnw_common082": {
+  "nl": "hnw_zyanL",
+  "skel": "int_hnw083"
+ },
+ "hnw_common083": {
+  "nl": "hnw_zyanM",
+  "skel": "int_hnw084"
+ },
+ "hnw_common084": {
+  "nl": "hnw_zyanS",
+  "skel": "int_hnw085"
+ },
+ "hnw_common085": {
+  "nl": "hnw_bokuL",
+  "skel": "int_hnw086"
+ },
+ "hnw_common086": {
+  "nl": "hnw_bokuT",
+  "skel": "int_hnw087"
+ },
+ "hnw_common088": {
+  "nl": "hnw_booS",
+  "skel": "int_hnw089"
+ },
+ "hnw_common089": {
+  "nl": "hnw_booT",
+  "skel": "int_hnw090"
+ },
+ "hnw_common090": {
+  "nl": "hnw_bonM",
+  "skel": "int_hnw091"
+ },
+ "hnw_common091": {
+  "nl": "hnw_bonS",
+  "skel": "int_hnw092"
+ },
+ "hnw_common092": {
+  "nl": "hnw_warpT",
+  "skel": "int_hnw093"
+ },
+ "hnw_common093": {
+  "nl": "hnw_parL",
+  "skel": "int_hnw094"
+ },
+ "hnw_common094": {
+  "nl": "hnw_parM",
+  "skel": "int_hnw095"
+ },
+ "hnw_common095": {
+  "nl": "hnw_parT",
+  "skel": "int_hnw096"
+ },
+ "hnw_common096": {
+  "nl": "hnw_tinpaT",
+  "skel": "int_hnw097"
+ },
+ "hnw_common097": {
+  "nl": "hnw_hunyaS",
+  "skel": "int_hnw098"
+ },
+ "hnw_common098": {
+  "nl": "hnw_hunyaM",
+  "skel": "int_hnw099"
+ },
+ "hnw_common099": {
+  "nl": "hnw_hunyaL",
+  "skel": "int_hnw100"
+ },
+ "hnw_common100": {
+  "nl": "hnw_pirooL",
+  "skel": "int_hnw101"
+ },
+ "hnw_common101": {
+  "nl": "hnw_pirooM",
+  "skel": "int_hnw102"
+ },
+ "hnw_common102": {
+  "nl": "hnw_pirooT",
+  "skel": "int_hnw103"
+ },
+ "hnw_common103": {
+  "nl": "hnw_pirooS",
+  "skel": "int_hnw104"
+ },
+ "hnw_common104": {
+  "nl": "hnw_genT",
+  "skel": "int_hnw105"
+ },
+ "hnw_common105": {
+  "nl": "hnw_genL",
+  "skel": "int_hnw106"
+ },
+ "hnw_common106": {
+  "nl": "hnw_genM",
+  "skel": "int_hnw107"
+ },
+ "hnw_common107": {
+  "nl": "hnw_genS",
+  "skel": "int_hnw108"
+ },
+ "hnw_common108": {
+  "nl": "hnw_boonL",
+  "skel": "int_hnw109"
+ },
+ "hnw_common109": {
+  "nl": "hnw_boonT",
+  "skel": "int_hnw110"
+ },
+ "hnw_common110": {
+  "nl": "hnw_boonM",
+  "skel": "int_hnw111"
+ },
+ "hnw_common111": {
+  "nl": "hnw_boonS",
+  "skel": "int_hnw112"
+ },
+ "hnw_common112": {
+  "nl": "hnw_dorilL",
+  "skel": "int_hnw113"
+ },
+ "hnw_common113": {
+  "nl": "hnw_dorilM",
+  "skel": "int_hnw114"
+ },
+ "hnw_common114": {
+  "nl": "hnw_dorilS",
+  "skel": "int_hnw115"
+ },
+ "hnw_common116": {
+  "nl": "hnw_huwaM",
+  "skel": "int_hnw117"
+ },
+ "hnw_common117": {
+  "nl": "hnw_huwaL2",
+  "skel": "int_hnw118"
+ },
+ "hnw_common118": {
+  "nl": "hnw_huwaT2",
+  "skel": "int_hnw119"
+ },
+ "hnw_common119": {
+  "nl": "hnw_huwaS",
+  "skel": "int_hnw120"
+ },
+ "hnw_common120": {
+  "nl": "hnw_huwaT",
+  "skel": "int_hnw121"
+ },
+ "hnw_common121": {
+  "nl": "hnw_clickL",
+  "skel": "int_hnw122"
+ },
+ "hnw_common122": {
+  "nl": "hnw_clickM",
+  "skel": "int_hnw123"
+ },
+ "hnw_common123": {
+  "nl": "hnw_clickS",
+  "skel": "int_hnw124"
+ },
+ "hnw_common124": {
+  "nl": "hnw_gyuM",
+  "skel": "int_hnw125"
+ },
+ "hnw_common125": {
+  "nl": "hnw_gyuL",
+  "skel": "int_hnw126"
+ },
+ "hnw_common126": {
+  "nl": "hnw_gyuS",
+  "skel": "int_hnw127"
+ },
+ "shop_umb06": {
+  "nl": "shopumb_umb_petal",
+  "gfx": [
+   "obj_shop_umb06_model",
+   "obj_shop_umb06_modelT"
+  ]
+ },
+ "shop_umb07": {
+  "nl": "shopumb_umb_ribbon",
+  "gfx": [
+   "obj_shop_umb07_model",
+   "obj_shop_umb07_modelT"
+  ]
+ },
+ "shop_umb08": {
+  "nl": "shopumb_umb_ging_candy",
+  "gfx": [
+   "obj_shop_umb08_model",
+   "obj_shop_umb08_modelT"
+  ]
+ },
+ "shop_umb10": {
+  "nl": "shopumb_umb_lacy",
+  "gfx": [
+   "obj_shop_umb10_model",
+   "obj_shop_umb10_modelT"
+  ]
+ },
+ "shop_umb11": {
+  "nl": "shopumb_umb_elegant",
+  "gfx": [
+   "obj_shop_umb11_model",
+   "obj_shop_umb11_modelT"
+  ]
+ },
+ "shop_umb16": {
+  "nl": "shopumb_umb_sunny",
+  "gfx": [
+   "obj_shop_umb16_model",
+   "obj_shop_umb16_modelT"
+  ]
+ },
+ "shop_umb17": {
+  "nl": "shopumb_umb_bat",
+  "gfx": [
+   "obj_shop_umb17_model",
+   "obj_shop_umb17_modelT"
+  ]
+ },
+ "shop_umb19": {
+  "nl": "shopumb_umb_ylw",
+  "gfx": [
+   "obj_shop_umb19_model",
+   "obj_shop_umb19_modelT"
+  ]
+ },
+ "shop_umb20": {
+  "nl": "shopumb_umb_leaf",
+  "gfx": [
+   "obj_shop_umb20_model",
+   "obj_shop_umb20_modelT"
+  ]
+ },
+ "shop_umb22": {
+  "nl": "shopumb_umb_paper",
+  "gfx": [
+   "obj_shop_umb22_model",
+   "obj_shop_umb22_modelT"
+  ]
+ },
+ "shop_umb23": {
+  "nl": "shopumb_umb_dot_toad",
+  "gfx": [
+   "obj_shop_umb23_model",
+   "obj_shop_umb23_modelT"
+  ]
+ },
+ "shop_umb25": {
+  "nl": "shopumb_umb_busted",
+  "gfx": [
+   "obj_shop_umb25_model",
+   "obj_shop_umb25_modelT"
+  ]
+ },
+ "shop_umb31": {
+  "nl": "shopumb_umb_blu",
+  "gfx": [
+   "obj_shop_umb31_model",
+   "obj_shop_umb31_modelT"
+  ]
+ },
+ "shop_umb32": {
+  "nl": "shopumb_umb_flame",
+  "gfx": [
+   "obj_shop_umb32_model",
+   "obj_shop_umb32_modelT"
+  ]
+ },
+ "nog_isidai": {
+  "nl": "fsh_ishidai",
+  "skel": "int_nog_isidai"
+ },
+ "nog_kaeru": {
+  "nl": "fsh_kaeru",
+  "skel": "int_nog_kaeru"
+ },
+ "nog_medaka": {
+  "nl": "fsh_medaka",
+  "skel": "int_nog_medaka"
+ },
+ "nog_piraluku": {
+  "nl": "fsh_piraruku",
+  "skel": "int_nog_piraluku"
+ },
+ "nog_suzuki": {
+  "nl": "fsh_suzuki",
+  "skel": "int_nog_suzuki"
+ },
+ "nog_zarigani": {
+  "nl": "fsh_zarigani",
+  "skel": "int_nog_zarigani"
+ },
+ "sum_kaseki": {
+  "nl": "fsh_siira",
+  "skel": "int_sum_kaseki"
+ },
+ "sum_raigyo": {
+  "nl": "fsh_raigyo",
+  "skel": "int_sum_raigyo"
+ },
+ "sum_unagi": {
+  "nl": "fsh_unagi",
+  "skel": "int_sum_unagi"
+ },
+ "sum_misin01": "oth_sewingN",
+ "tak_isu03": "pin_chairS",
+ "tak_moti": "oth_ricecake",
+ "tak_arwing": {
+  "nl": "nin_arwing",
+  "yaw": 90.0
+ },
+ "ike_jny_botle01": "jhn_botle",
+ "sum_clchest03": {
+  "nl": "rmk_chc_chestB",
+  "yaw": 90.0,
+  "skel": "int_sum_clchest03"
+ },
+ "tak_barber": {
+  "nl": "oth_barber",
+  "skel": "int_tak_barber"
+ },
+ "sum_roboconpo": {
+  "nl": "rmk_rob_audioM",
+  "yaw": 90.0,
+  "skel": "int_sum_roboconpo"
+ },
+ "sum_asi_chest02": {
+  "nl": "rmk_asi_chestA",
+  "skel": "int_sum_asi_chest02"
+ },
+ "sum_tekin01": "oth_vibraphone",
+ "sum_md01": "msc_CD",
+ "sum_blue_clk": {
+  "nl": "rmk_blu_clockP",
+  "skel": "int_sum_blue_clk"
+ },
+ "kon_ameclock": {
+  "nl": "oth_clockN_usa",
+  "yaw": 90.0,
+  "skel": "int_kon_ameclock"
+ },
+ "kon_waclock": {
+  "nl": "oth_clockN_daimyou",
+  "skel": "int_kon_waclock"
+ },
+ "kon_blueclock": {
+  "nl": "oth_clockP_glass",
+  "skel": "int_kon_blueclock"
+ },
+ "sum_hal_lanp01": "hwn_lamp",
+ "sum_golfbag01": {
+  "nl": "rmk_glf_golfbag_b",
+  "tint": {
+   "base_00": [
+    62,
+    112,
+    70
+   ]
+  }
+ },
+ "sum_golfbag02": {
+  "nl": "rmk_glf_golfbag_b",
+  "tint": {
+   "base_00": [
+    205,
+    202,
+    192
+   ]
+  }
+ },
+ "din_stump": "fos_footp",
+ "kon_redclock": {
+  "nl": "rmk_oth_clockN_red",
+  "skel": "int_kon_redclock"
+ },
+ "kon_grclock": {
+  "nl": "rmk_oth_clockN_green",
+  "skel": "int_kon_grclock"
+ },
+ "sum_art09": "art_rembra",
+ "sum_liccapiano": {
+  "nl": "rmk_oth_piano_b",
+  "variants": {
+   "base": "90"
+  }
+ }
+}

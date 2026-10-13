@@ -1,0 +1,50 @@
+#include "m_all_grow.h"
+/* The disposable editor field bypasses native new-town species assignment. */
+static void pc_preview_cedar_pool(void) {
+    extern int g_pc_tree_test_town, g_pc_tree_world, g_pc_verbose;
+    static const int native_caps[3]={6,4,2};
+    int bx,bz,total=0,decorated=0;
+    lbRTC_time_c* date=Common_GetPointer(time.rtc_time);
+    int holiday=date->month==12 && date->day>=10 && date->day<=25;
+    if (!g_pc_tree_test_town || !g_pc_tree_world || Save_Get(scene_no)!=SCENE_FIELD_TOOL || !g_fdinfo) return;
+    for(bz=1;bz<g_fdinfo->block_z_max-1;bz++) for(bx=1;bx<g_fdinfo->block_x_max-1;bx++) {
+        mActor_name_t* items=g_fdinfo->block_info[bz*g_fdinfo->block_x_max+bx].fg_info.items_p;
+        int i,cedars=0,lights=0;
+        if(!items) continue;
+        for(i=0;i<UT_TOTAL_NUM;i++) {
+            if(items[i]==TREE_LIGHTS) items[i]=TREE;
+            if(items[i]==CEDAR_TREE_LIGHTS) items[i]=CEDAR_TREE;
+            if(items[i]==CEDAR_TREE) cedars++;
+        }
+        /* Same per-acre caps and northern rows as mAGrw_ChangeTree2Cedar.
+         * Stable permutation avoids changing species when preview date changes.
+         * Only ordinary non-fruit trees qualify; positions/counts are retained. */
+        if(bz<=3) for(i=0;i<UT_TOTAL_NUM && cedars<native_caps[bz-1];i++) {
+            int tile=(i*137+bx*29+bz*53)&(UT_TOTAL_NUM-1);
+            xyz_t pos;
+            if(items[tile]!=TREE) continue;
+            pos.x=bx*mFI_BK_WORLDSIZE_X_F+(tile%UT_X_NUM+0.5f)*mFI_UT_WORLDSIZE_X_F;
+            pos.y=0;
+            pos.z=bz*mFI_BK_WORLDSIZE_Z_F+(tile/UT_X_NUM+0.5f)*mFI_UT_WORLDSIZE_Z_F;
+            /* Native lower northern rows reject cedars on the lowest layer. */
+            if(bz>1 && mCoBG_GetLayer(&pos)==mCoBG_LAYER0) continue;
+            items[tile]=CEDAR_TREE;cedars++;
+        }
+        total+=cedars;
+        /* Christmas decorations belong only on pines; retain the three-per-acre cap. */
+        if(holiday) for(i=0;i<UT_TOTAL_NUM && lights<mAGrw_XMAS_LIGHTS_MAX_BLOCK;i++) {
+            int tile=(i*137+bx*71+bz*37)&(UT_TOTAL_NUM-1);
+            if(items[tile]==CEDAR_TREE) {items[tile]=CEDAR_TREE_LIGHTS;lights++;}
+        }
+        decorated+=lights;
+        if (g_pc_verbose && holiday) for(i=0;i<UT_TOTAL_NUM;i++) {
+            if(items[i]==CEDAR_TREE_LIGHTS) {
+                OSReport("[PreviewCedarLights] acre=%d,%d unit=%d,%d world=%.1f,%.1f\n",
+                    bx,bz,i%UT_X_NUM,i/UT_X_NUM,
+                    bx*mFI_BK_WORLDSIZE_X_F+(i%UT_X_NUM+0.5f)*mFI_UT_WORLDSIZE_X_F,
+                    bz*mFI_BK_WORLDSIZE_Z_F+(i/UT_X_NUM+0.5f)*mFI_UT_WORLDSIZE_Z_F);
+            }
+        }
+    }
+    OSReport("[PreviewCedar] Year-round native species caps: %d cedars; holiday=%d decorated trees=%d\n",total,holiday,decorated);
+}

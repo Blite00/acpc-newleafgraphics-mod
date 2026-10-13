@@ -1,0 +1,104 @@
+/* Recording fixtures only. Actions themselves use the native controller and
+ * player state machines; no catch result or animation is synthesized here. */
+#include "pc_trailer_capture.h"
+#include "ac_insect_h.h"
+
+void pc_trailer_activity_tick(GAME* game) {
+    static int ticks;
+    static int previous_main = -1;
+    PLAYER_ACTOR* player;
+    int tool, scene, facing;
+    if (!pc_trailer_active()) return; /* Includes disposable-town requirement. */
+    tool = pc_trailer_activity_tool();
+    scene = pc_trailer_activity_scene();
+    facing = pc_trailer_activity_facing();
+    if (!tool && !scene && facing < 0) return;
+    player = GET_PLAYER_ACTOR_GAME(game);
+    if (!player) return;
+    ++ticks;
+    if (scene == 2 && ticks == 100 && !Common_Get(clip).insect_clip) {
+        /* The field-tool scene omits the normal outdoor insect controller.
+         * Add its real profile only for this explicit recording fixture. */
+        GAME_PLAY* play = (GAME_PLAY*)game;
+        ACTOR* controller = Actor_info_make_actor(&play->actor_info, game,
+            mAc_PROFILE_INSECT, 0.0f, 0.0f, 0.0f, 0, 0, 0, -1, -1, -1,
+            EMPTY_NO, -1, -1, -1);
+        OSReport("[TrailerActivity] Native insect controller created=%d\n", controller != NULL);
+    }
+    if (ticks == 120) {
+        if (scene == 1) {
+            xyz_t tree = player->actor_class.world.position;
+            int ux, uz, x, z;
+            tree.z -= 40.0f;
+            mFI_Wpos2UtCenterWpos(&tree, tree);
+            mFI_Wpos2UtNum(&ux, &uz, tree);
+            /* A small clear fruit landing area in the disposable fixture. */
+            for (z = -1; z <= 1; ++z) for (x = -1; x <= 1; ++x)
+                mFI_UtNumtoFGSet_common(EMPTY_NO, ux + x, uz + z, TRUE);
+            mFI_SetFG_common(TREE_APPLE_FRUIT, tree, TRUE);
+            player->actor_class.world.position.x = tree.x;
+            player->actor_class.world.position.z = tree.z + 30.0f;
+            facing = 0x8000;
+        }
+        if (scene == 2) { facing = 0x8000; tool = 3; }
+        if (scene == 3) {
+            ACTOR* actor = ((GAME_PLAY*)game)->actor_info.list[ACTOR_PART_NPC].actor;
+            ACTOR* nearest = NULL;
+            f32 best = 500.0f * 500.0f;
+            for (; actor != NULL; actor = actor->next_actor) {
+                f32 dx = actor->world.position.x - player->actor_class.world.position.x;
+                f32 dz = actor->world.position.z - player->actor_class.world.position.z;
+                f32 dist = dx * dx + dz * dz;
+                if (ITEM_NAME_GET_TYPE(actor->npc_id) == NAME_TYPE_NPC &&
+                    !((NPC_ACTOR*)actor)->condition_info.hide_flg && actor->drawn && dist < best) {
+                    nearest = actor;
+                    best = dist;
+                }
+            }
+            if (nearest) {
+                player->actor_class.world.position = nearest->world.position;
+                player->actor_class.world.position.z += 35.0f;
+                facing = 0x8000;
+                OSReport("[TrailerActivity] Neighbor name=%04x pos=%.1f,%.1f\n", nearest->npc_id,
+                         nearest->world.position.x, nearest->world.position.z);
+            } else OSReport("[TrailerActivity] No nearby visible neighbor; position unchanged\n");
+        }
+        if (facing >= 0) {
+            player->actor_class.shape_info.rotation.y = (s16)facing;
+            player->actor_class.world.angle.y = (s16)facing;
+        }
+        if (tool) {
+            {
+                static const mActor_name_t tools[] = { ITM_SHOVEL, ITM_ROD, ITM_NET, ITM_AXE, ITM_UMBRELLA00 + 22,
+                                                       ITM_GOLDEN_AXE, ITM_GOLDEN_NET, ITM_GOLDEN_ROD, ITM_GOLDEN_SHOVEL,
+                                                       ITM_AXE_USE_3, ITM_AXE_USE_7 };
+                Player_actor_Set_ItemNoSubmenu(tools[tool - 1]);
+            }
+            Player_actor_request_main_wait_all(game, -5.0f, 0.0f, 0, mPlayer_REQUEST_PRIORITY_21);
+        }
+        OSReport("[TrailerActivity] Prepared tool=%d scene=%d pos=%.1f,%.1f facing=%04x\n",
+                 tool, scene, player->actor_class.world.position.x,
+                 player->actor_class.world.position.z, (u16)player->actor_class.shape_info.rotation.y);
+    }
+    if (scene == 2 && ticks == 140) {
+        aINS_Clip_c* insects = Common_Get(clip).insect_clip;
+        if (insects && insects->make_insect_proc) {
+            aINS_Init_c init;
+            ACTOR* insect;
+            init.insect_type = aINS_INSECT_TYPE_COMMON_BUTTERFLY;
+            init.position = player->actor_class.world.position;
+            init.position.z -= 30.0f;
+            init.position.y += 20.0f;
+            init.extra_data = aINS_INIT_NORMAL;
+            init.game = game;
+            insect = insects->make_insect_proc(&init, aINS_MAKE_NEW);
+            OSReport("[TrailerActivity] Native butterfly spawned=%d at %.1f,%.1f\n",
+                     insect != NULL, init.position.x, init.position.z);
+        } else OSReport("[TrailerActivity] Insect controller unavailable\n");
+    }
+    if (ticks >= 120 && previous_main != player->now_main_index) {
+        previous_main = player->now_main_index;
+        OSReport("[TrailerActivity] tick=%d main=%d pos=%.1f,%.1f\n", ticks, previous_main,
+                 player->actor_class.world.position.x, player->actor_class.world.position.z);
+    }
+}

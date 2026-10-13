@@ -1,0 +1,127 @@
+/* Imported water changes rendering only; native collision, fish and flow stay. */
+extern unsigned char water_1_tex_dummy[], water_2_tex_dummy[];
+extern unsigned char wave1_tex_dummy[], wave2_tex_dummy[], wave3_tex_dummy[], beach2_tex_dummy2[], river_tex_dummy[];
+#include "pc_water_data.c_inc"
+
+static int pc_water_kind(const void* ptr, int width, int height, int format) {
+    if (format == GX_TF_I4 && width == 32 && height == 32) {
+        if (ptr == water_1_tex_dummy) return 20;
+        if (ptr == water_2_tex_dummy) return 21;
+    }
+    if (format == GX_TF_IA4 && width == 32) {
+        if (ptr == wave1_tex_dummy && height == 32) return 22;
+        if (ptr == wave2_tex_dummy && height == 64) return 23;
+        if (ptr == wave3_tex_dummy && height == 32) return 24;
+    }
+    if (ptr == beach2_tex_dummy2 && format == GX_TF_I4 && width == 32 && height == 16) return 25;
+    if (ptr == river_tex_dummy && format == GX_TF_C4 && width == 64 && height == 32) return 26;
+    return 0;
+}
+
+static const unsigned char* pc_water_surface(const void* ptr, int width, int height,
+                                            int format, const unsigned char* original) {
+    static unsigned char pixels[128*1024*4];
+    static unsigned int logged;
+    int kind=pc_water_kind(ptr,width,height,format);
+    int season=g_pc_terrain_season;
+    if (!kind || !original) return NULL;
+    if (season<0 || season>9) season=2;
+    if (!(logged & (1u<<kind))) {
+        fprintf(stderr,"[TerrainWorld] Imported water kind=%d donor season=%d; native geometry; donor palette and Fresnel\n",kind,season);
+        logged|=1u<<kind;
+    }
+    float grass_rows[32]={0},water_rows[32]={0};
+    float shore_rows[64]={0};
+    if (kind == 23) {
+        /* Native wave2's Y envelope follows the existing tide scroll. Remove
+         * only its lateral caustic noise; source textures supply the new foam. */
+        for(int y=0;y<64;++y) {
+            for(int x=0;x<32;++x) shore_rows[y]+=original[(y*32+x)*4+3]/32.0f;
+            if(y>0 && shore_rows[y]<shore_rows[y-1]) shore_rows[y]=shore_rows[y-1];
+        }
+        float maximum=shore_rows[63];
+        if(maximum>0.0f)for(int y=0;y<64;++y)shore_rows[y]/=maximum;
+    }
+    if (kind == 26) {
+        /* Native cliff palette:0..3 lawn,4..10 earth,11..15 submerged bank.
+         * Recover broad geometry coverage, not its obsolete sawtooth blades. */
+        const unsigned char* indexed=(const unsigned char*)ptr;
+        for (int y=0;y<32;y++) for (int x=0;x<64;x++) {
+            int n=((y/8)*8+x/8)*64+(y%8)*8+x%8;
+            int index=(indexed[n/2]>>(n%2 ? 0 : 4))&15;
+            grass_rows[y]+=(index<4)/64.0f;
+            water_rows[y]+=(index>=11)/64.0f;
+        }
+        for (int y=1;y<32;y++) {
+            if (grass_rows[y]>grass_rows[y-1]) grass_rows[y]=grass_rows[y-1];
+            if (water_rows[y]<water_rows[y-1]) water_rows[y]=water_rows[y-1];
+        }
+    }
+    /* Source foam cutout stays exact. Its threshold contour also supplies a
+     * smooth shallow-water film, without repeated fragment blur sampling. */
+    static float wave_edges[128];
+    static int wave_edge_season=-1;
+    if (kind==22 && wave_edge_season!=season) {
+        wave_edge_season=season;
+        const unsigned char* mask=pc_water_images[season][3];
+        for(int x=0;x<128;x++) {
+            wave_edges[x]=128.0f;
+            for(int y=0;y<128;y++) {
+                float a=mask[(y*128+x)*4+3];
+                if(a>=127.5f) {
+                    float before=y>0 ? mask[((y-1)*128+x)*4+3] : 0.0f;
+                    wave_edges[x]=y-0.5f+(a>before ? (127.5f-before)/(a-before) : 0.0f);
+                    break;
+                }
+            }
+        }
+    }
+    memset(pixels,0,sizeof(pixels));
+    for (int y=0;y<128;y++) {
+        /* Original first-cell samples are retained for the native alpha TEV.
+         * The donor material overrides RGB after TEV without moving the water. */
+        for (int x=0;x<128;x++)
+            memcpy(pixels+(y*1024+x)*4,original+((y*height/128)*width+x*width/128)*4,4);
+        for (int image=0;image<4;image++)
+            memcpy(pixels+(y*1024+(image+1)*128)*4,pc_water_images[season][image]+y*128*4,128*4);
+        if (kind >= 22 && kind <= 25) {
+            memcpy(pixels+(y*1024+640)*4,pc_coast_beach_seasons[season]+y*128*4,128*4);
+            memcpy(pixels+(y*1024+768)*4,pc_terrain_normal_seasons[season]+y*128*4,128*4);
+        }
+        if(kind==22) for(int x=0;x<128;x++) {
+            float distance=0.5f+0.5f*((y+0.5f)-wave_edges[x])/128.0f;
+            if(distance<0.0f)distance=0.0f; if(distance>1.0f)distance=1.0f;
+            unsigned char* dst=pixels+(y*1024+896+x)*4;
+            dst[0]=dst[1]=dst[2]=(unsigned char)(distance*255.0f+0.5f);dst[3]=255;
+        }
+        if (kind == 23) {
+            float row=(y+0.5f)*0.5f-0.5f;
+            int lo=row<0.0f ? -1 : (int)row,hi=lo+1;
+            float blend=row-lo;
+            if(lo<0)lo=0; if(hi<0)hi=0; if(lo>63)lo=63; if(hi>63)hi=63;
+            unsigned char coverage=(unsigned char)(255.0f*(shore_rows[lo]*(1-blend)+shore_rows[hi]*blend)+0.5f);
+            for(int x=0;x<128;++x) {
+                unsigned char* target=pixels+(y*1024+896+x)*4;
+                target[0]=target[1]=target[2]=coverage;target[3]=255;
+            }
+        }
+        if (kind == 26) {
+            float row=(y+0.5f)*0.25f-0.5f;
+            int lo=row<0.0f ? -1 : (int)row,hi=lo+1;
+            float frac=row-lo;
+            if(lo<0) lo=0; if(hi<0) hi=0; if(lo>31)lo=31; if(hi>31)hi=31;
+            unsigned char grass=(unsigned char)(255.0f*(grass_rows[lo]*(1-frac)+grass_rows[hi]*frac)+0.5f);
+            unsigned char water=(unsigned char)(255.0f*(water_rows[lo]*(1-frac)+water_rows[hi]*frac)+0.5f);
+            for(int x=0;x<128;x++) {
+                unsigned char* cell=pixels+(y*1024+x)*4;
+                cell[0]=grass;cell[1]=water;cell[2]=0;cell[3]=255;
+            }
+            int style=g_pc_terrain_style; if(style<0 || style>2)style=0;
+            memcpy(pixels+(y*1024+512)*4,pc_terrain_normal_seasons[season]+y*128*4,128*4);
+            memcpy(pixels+(y*1024+640)*4,pc_coast_cliff+y*128*4,128*4);
+            memcpy(pixels+(y*1024+768)*4,pc_coast_cliff_normal+y*128*4,128*4);
+            memcpy(pixels+(y*1024+896)*4,pc_terrain_grass_seasons[style][season]+y*128*4,128*4);
+        }
+    }
+    return pixels;
+}

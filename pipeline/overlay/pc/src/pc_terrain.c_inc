@@ -1,0 +1,81 @@
+/* Calendar-selected donor terrain for the opt-in imported-tree world. */
+extern int g_pc_tree_world;
+extern unsigned char grass_tex_dummy[], earth_tex_dummy[], stone_tex_dummy[];
+extern unsigned char cliff_tex_dummy[], sand_tex_dummy[], beach1_tex_dummy2[];
+extern unsigned char bush_a_tex_dummy[], bush_b_tex_dummy[], pc_foliage_wall_tex_dummy[];
+int g_pc_terrain_summer;
+int g_pc_terrain_style;
+int g_pc_terrain_season = 2;
+#include "pc_terrain_data.c_inc"
+#include "pc_coast_data.c_inc"
+extern const unsigned char* pc_foliage_surface(int kind,int width,int height,const unsigned char* native_rgba);
+extern int pc_foliage_calendar_season(void);
+#include "pc_water.c_inc"
+
+static const unsigned char* pc_terrain_surface(const void* ptr, int width, int height,
+                                               int format, int* out_size, int* out_height, const unsigned char* native_rgba) {
+    static unsigned int logged;
+    static unsigned char seasonal_pixels[128*1024*4];
+    int kind, style = g_pc_terrain_style;
+    *out_height=128;
+    if (!g_pc_tree_world || !g_pc_terrain_summer) return NULL;
+    if (pc_water_kind(ptr,width,height,format)) {
+        *out_size=1024;
+        return pc_water_surface(ptr,width,height,format,native_rgba);
+    }
+    if (format != GX_TF_C4 && !(format == GX_TF_I4 && ptr == beach1_tex_dummy2)) return NULL;
+    if (ptr == grass_tex_dummy && width == 32 && height == 32) kind = 0;
+    else if (ptr == earth_tex_dummy && width == 64 && height == 64) kind = 1;
+    else if (ptr == stone_tex_dummy && width == 64 && height == 64) kind = 2;
+    else if (width == 64 && ptr == cliff_tex_dummy && height == 64) kind = 3;
+    else if (ptr == sand_tex_dummy && width == 64 && height == 32) kind = 4;
+    else if (ptr == beach1_tex_dummy2 && width == 64 && height == 32) kind = 5;
+    else if (ptr == bush_a_tex_dummy && width == 64 && height == 64) kind = 6;
+    else if (ptr == bush_b_tex_dummy && width == 64 && height == 32) kind = 0;
+    else if (ptr == pc_foliage_wall_tex_dummy && width == 64 && height == 64) kind = 7;
+    else return NULL;
+    if (style < 0 || style > 2) return NULL;
+    *out_size = 1024;
+    if (!(logged & (1u << kind))) {
+        static const char* names[] = {"grass", "dirt", "stone", "cliff", "sand margin", "beach", "large foliage mound", "foliage sidewall"};
+        fprintf(stderr, "[TerrainWorld] Imported %s surface; style=%d, donor season=%d, planar surface with native boundary mask\n",
+                names[kind], style, g_pc_terrain_season);
+        logged |= 1u << kind;
+    }
+    if (kind == 6 || kind == 7) {
+        *out_height=256;
+        return pc_foliage_surface(kind,width,height,native_rgba);
+    }
+    {
+        int season = g_pc_terrain_season;
+        if (season < 0 || season > 9) season = 2;
+        memcpy(seasonal_pixels, pc_terrain_pixels[style][kind < 3 ? kind : 0], sizeof(seasonal_pixels));
+        for (int row=0; row<128; row++) {
+            memcpy(seasonal_pixels+(row*1024+128)*4, pc_terrain_grass_seasons[style][season]+row*128*4, 128*4);
+            memcpy(seasonal_pixels+(row*1024+512)*4, pc_terrain_normal_seasons[season]+row*128*4, 128*4);
+            if (kind >= 3 && kind <= 5) {
+                const unsigned char* edge = kind == 3 ? pc_coast_cliff_edges[style]
+                    : kind == 4 ? pc_coast_sand_edges[style] : pc_coast_shore_edge;
+                const unsigned char* color = kind == 3 ? pc_coast_cliff : pc_coast_beach_seasons[season];
+                for (int x=0;x<128;x++) {
+                    unsigned char* p=seasonal_pixels+(row*1024+x)*4;
+                    p[0]=p[1]=p[2]=edge[row*128+x]; p[3]=255;
+                }
+                memcpy(seasonal_pixels+(row*1024+384)*4,color+row*128*4,128*4);
+                memcpy(seasonal_pixels+(row*1024+640)*4,pc_coast_cliff_normal+row*128*4,128*4);
+                if (kind == 5) {
+                    // Shoreline material owns foam; spare cells replace unused lawn/soil.
+                    memcpy(seasonal_pixels+(row*1024+128)*4,pc_water_images[season][2]+row*128*4,128*4);
+                    memcpy(seasonal_pixels+(row*1024+256)*4,pc_water_images[season][3]+row*128*4,128*4);
+                    memcpy(seasonal_pixels+(row*1024+768)*4,pc_water_images[season][0]+row*128*4,128*4);
+                    memcpy(seasonal_pixels+(row*1024+896)*4,pc_water_images[season][1]+row*128*4,128*4);
+                }
+            }
+        }
+        /* Source seasonal C0/C1/C2 occupy three otherwise unused soil texels.
+         * The shader reads their centers; original texture alpha is untouched. */
+        if (kind != 5) for (int color=0;color<3;color++)
+            memcpy(seasonal_pixels+(256+color)*4,pc_terrain_material_colors[season][color],3);
+    }
+    return seasonal_pixels;
+}
