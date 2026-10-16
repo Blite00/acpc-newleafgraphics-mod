@@ -25,6 +25,9 @@ from your ROMs on your computer, and builds the New Leaf version locally.
 - About 6 GB of free disk space during setup (about 1 GB afterwards)
 - An internet connection during the first setup (to download the model reader source, see *How it works*)
 
+- Gameplay preview
+- https://www.youtube.com/watch?v=6_uEB3ACC3M
+
 ### Supported New Leaf ROM formats
 
 The ROM must be **decrypted** (for example dumped with GodMode9 using a "decrypted" option, or decrypted afterwards).
