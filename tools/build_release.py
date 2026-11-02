@@ -27,7 +27,7 @@ ap.add_argument('--realesrgan', default=r'G:\PC_ports\ACPC\asset_import_work\too
 ap.add_argument('--sdl2', default=r'G:\PC_ports\ACPC\asset_import_work\SDL2-2.30.10')
 args = ap.parse_args()
 OUT = Path(args.out)
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 
 
 def copytree(src, dst, ignore=None):

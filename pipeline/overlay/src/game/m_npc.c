@@ -1419,7 +1419,7 @@ extern void mNpc_ClearRemail(Anmremail_c* remail) {
 static void mNpc_GetRemailPresent(mActor_name_t* present) {
     static int category_table[2] = { mSP_KIND_FURNITURE, mSP_KIND_CLOTH };
 
-    if (RANDOM(5) == 0) {
+    if (RANDOM(5) == 0 && pc_hats_enabled()) {
         *present = PC_HAT_RANDOM(); /* PC: villagers send hats too */
         return;
     }
@@ -1825,7 +1825,7 @@ static void mNpc_GetBirthdayPresent(mActor_name_t* present) {
 
     int selected = category_table[RANDOM(ARRAY_COUNT(category_table))];
 
-    if (RANDOM(5) == 0) {
+    if (RANDOM(5) == 0 && pc_hats_enabled()) {
         *present = PC_HAT_RANDOM(); /* PC: birthday hats */
         return;
     }

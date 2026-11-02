@@ -63,13 +63,20 @@ static void aWeatherRain_make(ACTOR* actor, GAME* game) {
     f32 x, y, z;
 
     count = aWeatherRain_DecideMakeRainCount(actor);
+#ifdef TARGET_PC
+    { /* widescreen: more drops for the wider spawn strip, fraction carried over */
+        static f32 s_extra;
+        s_extra += count * (aWEATHER_W - 1.0f);
+        while (s_extra >= 1.0f) { count++; s_extra -= 1.0f; }
+    }
+#endif
     pos = weather->pos;
 
     for (i = 0; i < count; i++) {
 
         priv_num = Common_Get(clip.weather_clip)->get_priv_num(&weather->actor_class);
         if (priv_num != -1) {
-            x = -130.0f + (RANDOM_F(260.0f));
+            x = -130.0f * aWEATHER_W + (RANDOM_F(260.0f * aWEATHER_W));
             z = -200.0f + (RANDOM_F(360.0f));
 
             pos_mod = pos;

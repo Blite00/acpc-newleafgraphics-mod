@@ -263,7 +263,7 @@ static void Player_actor_draw_Normal(ACTOR* actorx, GAME* game) {
             }
         }
         pc_nl_heads_frame(Now_Private->gender, Now_Private->face, mPlib_get_player_face_pallet_p(game),
-                          ITEM_IS_HAT(*hat) ? PC_HAT_INDEX(*hat) : -1);
+                          ITEM_IS_HAT(*hat) && pc_hats_enabled() ? PC_HAT_INDEX(*hat) : -1);
     }
 #endif
 

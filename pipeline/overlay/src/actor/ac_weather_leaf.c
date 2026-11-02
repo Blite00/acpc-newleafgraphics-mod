@@ -37,9 +37,9 @@ static int aWeatherLeaf_DecideMakeLeafCount(ACTOR* actor, GAME* game) {
     WEATHER_ACTOR* weather = (WEATHER_ACTOR*)actor;
 
     if (weather->current_level == 1) {
-        return aWeather_ShouldSpawnEvery(actor, 16.0f);
+        return aWeather_ShouldSpawnEvery(actor, 16.0f / aWEATHER_W);
     }
-    return aWeather_ShouldSpawnEvery(actor, 8.0f);
+    return aWeather_ShouldSpawnEvery(actor, 8.0f / aWEATHER_W);
 }
 
 static void aWeatherLeaf_make(ACTOR* actor, GAME* game) {
@@ -57,7 +57,7 @@ static void aWeatherLeaf_make(ACTOR* actor, GAME* game) {
     if (aWeatherLeaf_DecideMakeLeafCount(actor, game) != 0) {
         base.y = -0.8f + (RANDOM_F(-0.1f));
         if (count != -1) {
-            x = -100.0f + (RANDOM_F(200.0f));
+            x = -100.0f * aWEATHER_W + (RANDOM_F(200.0f * aWEATHER_W));
             z = -200.0f + (RANDOM_F(380.0f));
 
             mod_pos = pos;
@@ -93,10 +93,10 @@ static int aWeatherLeaf_CheckLeafBorder(aWeather_Priv* priv) {
         pos = weather->pos;
         leafTemp = priv->pos.x;
 
-        if (leafTemp < (-100.0f + pos.x)) {
+        if (leafTemp < (-100.0f * aWEATHER_W + pos.x)) {
             ret |= 2;
         }
-        if (leafTemp > (100.0f + pos.x)) {
+        if (leafTemp > (100.0f * aWEATHER_W + pos.x)) {
             ret |= 8;
         }
         leafTemp = priv->pos.z;
@@ -117,10 +117,10 @@ static void aWeatherLeaf_CheckLeafScroll(aWeather_Priv* priv) {
 
     if (border != 0) {
         if ((border >> 1) & 1) {
-            priv->pos.x += 200.0f;
+            priv->pos.x += 200.0f * aWEATHER_W;
         }
         if ((border >> 3) & 1) {
-            priv->pos.x -= 200.0f;
+            priv->pos.x -= 200.0f * aWEATHER_W;
         }
         if ((border >> 2) & 1) {
             priv->pos.z -= 380.0f;
@@ -202,7 +202,7 @@ void aWeatherLeaf_draw(aWeather_Priv* priv, GAME* game) {
     Game_play_Projection_Trans(play, &pos, &screen_pos);
 #endif
 
-    if ((screen_pos.x >= 0.0f) && (screen_pos.x < SCREEN_WIDTH_F) && (screen_pos.y >= 0.0f) &&
+    if ((screen_pos.x >= aWEATHER_SX0) && (screen_pos.x < aWEATHER_SX1) && (screen_pos.y >= 0.0f) &&
         (screen_pos.y < SCREEN_HEIGHT_F)) {
 
         work = GRAPH_ALLOC_TYPE(game->graph, Mtx, 1);

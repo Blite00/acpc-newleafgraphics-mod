@@ -26,8 +26,9 @@
 #include <shobjidl.h>
 #include <wchar.h>
 #include <stdio.h>
+#include <string.h>
 
-#define MOD_VERSION L"1.0.0"
+#define MOD_VERSION L"1.1.0"
 #define APP_TITLE L"Animal Crossing - New Leaf graphics mod"
 
 static wchar_t g_root[MAX_PATH];
@@ -244,6 +245,56 @@ static int ask_choice(void) {
     return pressed;
 }
 
+/* Player heads: New Leaf heads + character creator, or the original GameCube heads (settings.ini original_heads).
+ * Also changeable later in the game: Settings > Gameplay > Player heads. */
+enum { CHOICE_NL_HEADS = 1101, CHOICE_GC_HEADS };
+
+static void set_original_heads(int on) {
+    static char buf[16384], out[16448];
+    char* line;
+    int n = 0, found = 0;
+    FILE* f;
+    wchar_t p[MAX_PATH];
+    path_join(p, L"settings.ini");
+    out[0] = 0;
+    f = _wfopen(p, L"rb");
+    if (f) { n = (int)fread(buf, 1, sizeof(buf) - 1, f); fclose(f); }
+    buf[n] = 0;
+    for (line = strtok(buf, "\n"); line; line = strtok(NULL, "\n")) {
+        size_t l = strlen(line);
+        if (l && line[l - 1] == '\r') line[--l] = 0;
+        if (strncmp(line, "original_heads", 14) == 0) { found = 1; snprintf(line, l + 1, "original_heads = %d", on); }
+        if (strlen(out) + strlen(line) + 3 < sizeof(out)) { strcat(out, line); strcat(out, "\r\n"); }
+    }
+    if (!found) sprintf(out + strlen(out), "\r\n# Player heads: 0 = New Leaf heads + character creator, 1 = original GameCube heads\r\noriginal_heads = %d\r\n", on);
+    f = _wfopen(p, L"wb");
+    if (f) { fwrite(out, 1, strlen(out), f); fclose(f); }
+}
+
+static void ask_heads(void) {
+    TASKDIALOGCONFIG c;
+    TASKDIALOG_BUTTON b[2] = {
+        { CHOICE_NL_HEADS, L"New Leaf heads (recommended)\nNew Leaf player heads and hairstyles, with the character creator at the start of a new game" },
+        { CHOICE_GC_HEADS, L"Original GameCube heads\nKeep the GameCube player heads and faces. The character creator and the New Leaf hats are turned off" },
+    };
+    int pressed = CHOICE_NL_HEADS;
+    ZeroMemory(&c, sizeof(c));
+    c.cbSize = sizeof(c);
+    c.dwFlags = TDF_USE_COMMAND_LINKS;
+    c.pszWindowTitle = APP_TITLE;
+    c.pszMainInstruction = L"Choose the player heads";
+    c.pszContent = L"You can change this later in the game: Settings > Gameplay > Player heads.";
+    c.pButtons = b;
+    c.cButtons = 2;
+    c.nDefaultButton = CHOICE_NL_HEADS;
+    if (FAILED(TaskDialogIndirect(&c, &pressed, NULL, NULL))) {
+        int r = MessageBoxW(NULL, L"Use the New Leaf player heads (with the character creator)?\n\nYes = New Leaf heads\nNo = original GameCube heads",
+                            APP_TITLE, MB_YESNO | MB_ICONQUESTION);
+        pressed = r == IDNO ? CHOICE_GC_HEADS : CHOICE_NL_HEADS;
+    }
+    set_original_heads(pressed == CHOICE_GC_HEADS);
+}
+
 static int run_setup(const wchar_t* rom, const wchar_t* base) {
     wchar_t py[MAX_PATH], args[4096], err[2048];
     DWORD code;
@@ -325,6 +376,7 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, PWSTR cmdline, int show) {
         path_join(p, L"newleaf_cache\\SKIPPED");
         DeleteFileW(p);
     }
+    ask_heads();
     if (run_setup(rom, base)) return play_newleaf();
     return play_vanilla(NULL);
 }

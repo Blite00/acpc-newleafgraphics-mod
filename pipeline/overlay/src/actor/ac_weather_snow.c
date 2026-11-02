@@ -34,11 +34,11 @@ static int aWeatherSnow_DecideMakeSnowCount(ACTOR* actor, GAME* game) {
     WEATHER_ACTOR* weather = (WEATHER_ACTOR*)actor;
 
     if (weather->current_level == mEnv_WEATHER_INTENSITY_LIGHT) {
-        return aWeather_ShouldSpawnEvery(actor, 8.0f);
+        return aWeather_ShouldSpawnEvery(actor, 8.0f / aWEATHER_W);
     } else if (weather->current_level == mEnv_WEATHER_INTENSITY_NORMAL) {
-        return aWeather_ShouldSpawnEvery(actor, 4.0f);
+        return aWeather_ShouldSpawnEvery(actor, 4.0f / aWEATHER_W);
     }
-    return aWeather_ShouldSpawnEvery(actor, 2.0f);
+    return aWeather_ShouldSpawnEvery(actor, 2.0f / aWEATHER_W);
 }
 
 static void aWeatherSnow_make(ACTOR* actor, GAME* game) {
@@ -56,7 +56,7 @@ static void aWeatherSnow_make(ACTOR* actor, GAME* game) {
     if (aWeatherSnow_DecideMakeSnowCount(actor, game) != 0) {
         base.y = -0.5f + (RANDOM_F(-2.0f));
         if (count != -1) {
-            x = -100.0f + (RANDOM_F(200.0f));
+            x = -100.0f * aWEATHER_W + (RANDOM_F(200.0f * aWEATHER_W));
             z = -200.0f + (RANDOM_F(380.0f));
 
             mod_pos = pos;
@@ -87,10 +87,10 @@ static int aWeatherSnow_CheckSnowBorder(aWeather_Priv* priv, GAME_PLAY* play) {
         wtemp = weather->pos.x;
         ptemp = priv->pos.x;
 
-        if (ptemp < (-100.0f + wtemp)) {
+        if (ptemp < (-100.0f * aWEATHER_W + wtemp)) {
             ret |= 2;
         }
-        if (ptemp > (100.0f + wtemp)) {
+        if (ptemp > (100.0f * aWEATHER_W + wtemp)) {
             ret |= 8;
         }
         wtemp = weather->pos.z;
@@ -113,10 +113,10 @@ static void aWeatherSnow_CheckSnowScroll(aWeather_Priv* priv, GAME_PLAY* play) {
 
     if (border != 0) {
         if ((border >> 1) & 1) {
-            priv->pos.x += 200.0f;
+            priv->pos.x += 200.0f * aWEATHER_W;
         }
         if ((border >> 3) & 1) {
-            priv->pos.x -= 200.0f;
+            priv->pos.x -= 200.0f * aWEATHER_W;
         }
         if ((border >> 2) & 1) {
             priv->pos.z -= 380.0f;
@@ -207,7 +207,7 @@ void aWeatherSnow_draw(aWeather_Priv* priv, GAME* game) {
     Game_play_Projection_Trans(play, &pos, &screen_pos);
 #endif
 
-    if ((0.0f <= screen_pos.x) && (screen_pos.x < SCREEN_WIDTH_F) && (0.0f <= screen_pos.y) &&
+    if ((aWEATHER_SX0 <= screen_pos.x) && (screen_pos.x < aWEATHER_SX1) && (0.0f <= screen_pos.y) &&
         (screen_pos.y < SCREEN_HEIGHT_F)) {
 
         work = GRAPH_ALLOC_TYPE(game->graph, Mtx, 1);

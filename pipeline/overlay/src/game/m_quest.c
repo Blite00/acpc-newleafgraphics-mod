@@ -576,7 +576,7 @@ static mActor_name_t mQst_GetPresent(int rank) {
         mSP_SelectRandomItem_New(NULL, &item, 1, NULL, 0, category, list, FALSE);
     }
 
-    if (category == mSP_KIND_CLOTH && mQst_GetRandom(3) == 0) {
+    if (category == mSP_KIND_CLOTH && mQst_GetRandom(3) == 0 && pc_hats_enabled()) {
         item = PC_HAT_RANDOM(); /* PC: clothing rewards are sometimes a hat */
     }
 
@@ -933,7 +933,7 @@ extern void mQst_GetGoods_common(mActor_name_t* item, AnmPersonalID_c* pid, int 
 
 #ifdef TARGET_PC
     /* PC: errands that reward clothing give a New Leaf hat a third of the time */
-    if (category == mSP_KIND_CLOTH && RANDOM(3) == 0) {
+    if (category == mSP_KIND_CLOTH && RANDOM(3) == 0 && pc_hats_enabled()) {
         *item = PC_HAT_RANDOM();
         return;
     }

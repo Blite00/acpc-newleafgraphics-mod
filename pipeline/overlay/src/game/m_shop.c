@@ -875,7 +875,7 @@ static void mSP_MakeRandomGoodsList(GAME* game, int* count, mActor_name_t* goods
         /* no grab bag sale, so roll paper & diaries */
         mSP_SelectRandomItem_New(game, goods_list + count[0], goods_count[mSP_GOODS_TYPE_PAPER], NULL, 0,
                                  mSP_KIND_PAPER, mSP_LISTTYPE_ABC, FALSE);
-        if (goods_count[mSP_GOODS_TYPE_PAPER] != 0) {
+        if (goods_count[mSP_GOODS_TYPE_PAPER] != 0 && pc_hats_enabled()) {
             goods_list[count[0]] = PC_HAT_RANDOM(); /* PC: one New Leaf hat for sale every day */
         }
         count[0] += goods_count[mSP_GOODS_TYPE_PAPER];

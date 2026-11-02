@@ -551,7 +551,7 @@ def main():
             out.append(f'extern Gfx pc_nlh_{tag}[];')
         print(sex, 'scale', round(s, 1))
     out += ['extern cKF_Skeleton_R_c cKF_bs_r_boy_1;', 'extern cKF_Skeleton_R_c cKF_bs_r_grl_1;',
-            '#include <stdio.h>', '#include <string.h>', '#include <SDL.h>',
+            '#include <stdio.h>', '#include <stdlib.h>', '#include <string.h>', '#include <SDL.h>',
             'extern int pc_nl_hat_count;', 'extern Gfx* pc_nl_hat_dl[];', 'extern const unsigned char pc_nl_hat_fullhair[];', 'extern const char* pc_nl_hat_name[];']
     for var in 'ab':
         out += [f'static Gfx* const pc_nlh_heads_{var}[2][8] = {{',
@@ -564,6 +564,7 @@ def main():
     out += r"""
 static Gfx pc_nlh_slot[2][6];
 static Mtx pc_nlh_hatmtx[2];
+#include "pc_settings.h"
 static int pc_nlh_hat = -2;          /* -2 = not loaded yet, -1 = no hat, else index into pc_nl_hat_dl */
 
 static const char* pc_nlh_hat_env = NULL;  /* PC_HAT=<name>|none: preview override */
@@ -587,6 +588,9 @@ static void pc_nlh_hat_load(void) {
 /* character creator thread (pc_nl_creator.c): the player's chosen hairstyle/colour head, NULL = face default */
 extern Gfx* pc_cc_head(int sex, int face, int short_hair) __attribute__((weak));
 
+/* hats follow the head choice: original GameCube heads = no New Leaf hats (settings.ini original_heads) */
+int pc_hats_enabled(void) { return !g_pc_settings.original_heads; }
+
 int pc_hat_take_off_pressed(void) {
     static int prev = 0;
     const Uint8* k = SDL_GetKeyboardState(NULL);
@@ -602,11 +606,20 @@ void pc_nl_heads_frame(int sex, int face, const u16* pal, int hat) {
     cKF_Skeleton_R_c* sk;
     Gfx* g;
     u16 c;
+    static Gfx* gc_head[2];   /* the GameCube head the skeleton came with */
     if (off < 0) off = getenv("PC_GC_HEAD") != NULL;
-    if (off || sex < 0 || sex > 1 || face < 0 || face > 7) return;
+    if (sex < 0 || sex > 1 || face < 0 || face > 7) return;
+    sk = sex ? &cKF_bs_r_grl_1 : &cKF_bs_r_boy_1;
+    if (sk->num_joints <= 24) return;
+    if (gc_head[sex] == NULL) gc_head[sex] = sk->joint_table[24].model;
     if (pc_nlh_hat == -2) pc_nlh_hat_load();
     pc_nlh_hat = pc_nlh_hat_env != NULL ? pc_nlh_hat_env_idx : (hat >= 0 && hat < pc_nl_hat_count ? hat : -1);
     g = pc_nlh_slot[sex];
+    if (off || g_pc_settings.original_heads) {
+        /* original GameCube heads (settings.ini original_heads = 1): plain GC head, no New Leaf hats */
+        sk->joint_table[24].model = gc_head[sex];
+        return;
+    }
     gSPDisplayList(g++, sex ? pc_nlh_collar_1 : pc_nlh_collar_0);
     if (pc_nlh_hat >= 0) {
         int shorth = !pc_nl_hat_fullhair[pc_nlh_hat];
@@ -622,8 +635,7 @@ void pc_nl_heads_frame(int sex, int face, const u16* pal, int hat) {
         gSPDisplayList(g++, hd);
     }
     gSPEndDisplayList(g++);
-    sk = sex ? &cKF_bs_r_grl_1 : &cKF_bs_r_boy_1;
-    if (sk->num_joints > 24) sk->joint_table[24].model = pc_nlh_slot[sex];
+    sk->joint_table[24].model = pc_nlh_slot[sex];
     if (pal != NULL) {
         c = pal[SKIN_IDX];      /* native order after the PC palette byte swap; RGB5A3 */
         if (c & 0x8000) { gDPSetEnvColor(&pc_nlh_env[0], ((c >> 10) & 31) * 255 / 31, ((c >> 5) & 31) * 255 / 31, (c & 31) * 255 / 31, 255); }

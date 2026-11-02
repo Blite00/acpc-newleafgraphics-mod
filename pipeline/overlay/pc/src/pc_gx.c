@@ -220,6 +220,14 @@ static float g_aspect_factor = 1.0f;
 static float g_aspect_offset = 0.0f;
 static int   g_aspect_active = 0;
 
+/* how much wider than the GameCube 4:3 view the visible world is (falling weather spawn width) */
+float pc_weather_width_scale(void) {
+    float w;
+    if (!g_aspect_active || g_aspect_factor <= 0.0f) return 1.0f; /* window shape only: the per-draw stretch mode is stale in game logic */
+    w = 1.0f / g_aspect_factor;
+    return w < 1.0f ? 1.0f : w > 3.0f ? 3.0f : w;
+}
+
 static void pc_gx_update_aspect(void) {
     float gc_aspect = (float)PC_GC_WIDTH / (float)PC_GC_HEIGHT;
     float win_aspect = (float)g_pc_window_w / (float)g_pc_window_h;

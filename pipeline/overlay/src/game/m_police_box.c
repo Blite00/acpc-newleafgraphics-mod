@@ -259,7 +259,7 @@ static mActor_name_t mPB_get_force_set_item() {
     int roll = (int)(fqrand() * 100.0f);
     int i;
 
-    if (fqrand() < 0.10f) {
+    if (fqrand() < 0.10f && pc_hats_enabled()) {
         return PC_HAT_RANDOM(); /* PC: New Leaf hats turn up in the lost and found */
     }
 

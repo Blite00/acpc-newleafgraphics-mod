@@ -13,5 +13,7 @@ extern unsigned char pc_hat_icon_tex[][512];
 /* the worn hat lives in two spare bytes of the player's save data */
 #define PC_HAT_SLOT(priv) ((mActor_name_t*)&(priv)->unk_10A8[0])
 /* a random hat (uses the game's fqrand, so call it where m_lib is in scope) */
+/* 0 when the player chose the original GameCube heads (settings.ini original_heads): no hats are given or worn */
+extern int pc_hats_enabled(void);
 #define PC_HAT_RANDOM() ((mActor_name_t)(ITM_HAT_START + (int)(fqrand() * (f32)PC_HAT_NUM) % PC_HAT_NUM))
 #endif

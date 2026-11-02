@@ -11,6 +11,7 @@
  * Hair textures are painted at run time from colour-free maps (generate_nl_creator_heads.py):
  * texel = colour * G + New Leaf skin * S, alpha = A. The intro creator is on by default; PC_CREATOR=0 turns it off.
  */
+#include "pc_settings.h"
 #include "pc_platform.h"
 #include "pc_nl_ui.h"
 #include "PR/mbi.h"
@@ -72,7 +73,7 @@ int pc_cc_enabled(void) {
     if (cc_disabled < 0) {
         extern char* getenv(const char*);
         const char* e = getenv("PC_CREATOR"); /* on by default; PC_CREATOR=0 turns it off */
-        cc_disabled = e != NULL && e[0] == '0';
+        cc_disabled = (e != NULL && e[0] == '0') || g_pc_settings.original_heads; /* original heads: no creator */
     }
     return !cc_disabled;
 }

@@ -22,7 +22,7 @@ sys.path.insert(0, str(HERE))
 import acnl_rom, gc_rom  # noqa: E402
 from common import SetupError  # noqa: E402
 
-MOD_VERSION = '1.0.0'
+MOD_VERSION = '1.1.0'
 
 
 class Log:
@@ -285,7 +285,7 @@ class Setup:
             self.run([sys.executable, '-s', '-X', 'utf8', str(script)] + cmd[1:], cwd=cwd, env=self.env(**st.get('env', {})),
                      what=st['name'], timeout=st.get('timeout', 3600))
         # generators append themselves to the CMake source list; the shipped list already has everything
-        shutil.copy2(self.mod / 'source' / 'ACGC-PC-Port' / 'pc' / 'CMakeLists.txt', self.work / 'ACGC-PC-Port' / 'pc' / 'CMakeLists.txt')
+        shutil.copy2(self.mod / 'pipeline' / 'overlay' / 'pc' / 'CMakeLists.txt', self.work / 'ACGC-PC-Port' / 'pc' / 'CMakeLists.txt')
         # sources that only exist once the poses are recorded (phase 2) get an empty placeholder for the first build
         import re as _re
         cm = (self.work / 'ACGC-PC-Port' / 'pc' / 'CMakeLists.txt').read_text()

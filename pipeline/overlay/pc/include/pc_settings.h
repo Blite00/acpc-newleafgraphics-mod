@@ -22,6 +22,7 @@ typedef struct {
     int master_volume;    /* Applied at the PC audio output, 0-100 (default 100) */
     int stick_deadzone;   /* Gamepad main stick deadzone, percent 0-40 (default 12) */
     int cstick_deadzone;  /* Gamepad C-stick deadzone, percent 0-40 (default 12) */
+    int original_heads;   /* 1 = GameCube player heads (no New Leaf heads, no character creator) */
 } PCSettings;
 
 extern PCSettings g_pc_settings;

@@ -6005,7 +6005,7 @@ static int mTG_move_check_hand_item_on_player(mActor_name_t item) {
     int category = ITEM_NAME_GET_CAT(item);
 
     if (ITEM_IS_HAT(item)) {
-        return TRUE;
+        return pc_hats_enabled(); /* original GameCube heads: hats can't be worn */
     }
     return (ITEM_NAME_GET_TYPE(item) == NAME_TYPE_ITEM1 &&
             (category == ITEM1_CAT_CLOTH || category == ITEM1_CAT_FRUIT || category == ITEM1_CAT_TOOL ||

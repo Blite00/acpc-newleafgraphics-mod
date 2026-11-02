@@ -374,6 +374,8 @@ static void scan_directory(const char* dir_path) {
         snprintf(full_path, sizeof(full_path), "%s\\%s", dir_path, fd.cFileName);
 
         if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            /* original GameCube heads: keep their own eyes/mouths (nl_faces is the New Leaf face art) */
+            if (g_pc_settings.original_heads && _stricmp(fd.cFileName, "nl_faces") == 0) continue;
             scan_directory(full_path);
         } else {
             int len = (int)strlen(fd.cFileName);

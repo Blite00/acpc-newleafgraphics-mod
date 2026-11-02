@@ -27,6 +27,7 @@ enum {
     ITEM_BORDERLESS_ACRES,
     ITEM_ASPECT,
     ITEM_NES_ASPECT,
+    ITEM_ORIGINAL_HEADS,
     ITEM_MASTER_VOLUME,
     ITEM_STICK_DEADZONE,
     ITEM_CSTICK_DEADZONE,
@@ -57,6 +58,7 @@ static const Item tab_gameplay_items[] = {
     { "Shop upgrade",     ITEM_SHOP_VISITOR,     0 },
     { "Borderless acres", ITEM_BORDERLESS_ACRES, 0 },
     { "NES aspect",       ITEM_NES_ASPECT,       0 },
+    { "Player heads",     ITEM_ORIGINAL_HEADS,   1 },
 };
 
 static const Item tab_audio_items[] = {
@@ -265,6 +267,7 @@ static void recompute_dirty(void) {
         (s_pending.borderless_acres != g_pc_settings.borderless_acres) ||
         (s_pending.aspect_mode      != g_pc_settings.aspect_mode) ||
         (s_pending.nes_aspect       != g_pc_settings.nes_aspect) ||
+        (s_pending.original_heads   != g_pc_settings.original_heads) ||
         (s_pending.master_volume    != g_pc_settings.master_volume) ||
         (s_pending.stick_deadzone   != g_pc_settings.stick_deadzone) ||
         (s_pending.cstick_deadzone  != g_pc_settings.cstick_deadzone);
@@ -328,6 +331,9 @@ static void item_cycle(int id, int dir) {
             break;
         case ITEM_NES_ASPECT:
             s_pending.nes_aspect = !s_pending.nes_aspect;
+            break;
+        case ITEM_ORIGINAL_HEADS:
+            s_pending.original_heads = !s_pending.original_heads;
             break;
         case ITEM_MASTER_VOLUME: {
             int v = s_pending.master_volume + (dir > 0 ? 10 : -10);
@@ -402,6 +408,9 @@ static void item_format(int id, char* buf, size_t n) {
         case ITEM_NES_ASPECT:
             snprintf(buf, n, "%s", s_pending.nes_aspect ? "< 4:3 >" : "< Stretch >");
             break;
+        case ITEM_ORIGINAL_HEADS:
+            snprintf(buf, n, "%s", s_pending.original_heads ? "< GameCube >" : "< New Leaf >");
+            break;
         case ITEM_MASTER_VOLUME:
             snprintf(buf, n, "< %d%% >", s_pending.master_volume);
             break;
@@ -436,6 +445,7 @@ static int item_changed(int id) {
         case ITEM_BORDERLESS_ACRES: return s_pending.borderless_acres != g_pc_settings.borderless_acres;
         case ITEM_ASPECT:        return s_pending.aspect_mode != g_pc_settings.aspect_mode;
         case ITEM_NES_ASPECT:    return s_pending.nes_aspect    != g_pc_settings.nes_aspect;
+        case ITEM_ORIGINAL_HEADS: return s_pending.original_heads != g_pc_settings.original_heads;
         case ITEM_MASTER_VOLUME: return s_pending.master_volume != g_pc_settings.master_volume;
         case ITEM_STICK_DEADZONE:  return s_pending.stick_deadzone  != g_pc_settings.stick_deadzone;
         case ITEM_CSTICK_DEADZONE: return s_pending.cstick_deadzone != g_pc_settings.cstick_deadzone;

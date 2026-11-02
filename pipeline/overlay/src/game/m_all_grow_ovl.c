@@ -2666,7 +2666,7 @@ static mActor_name_t mAGrw_GetSetItemDump() {
     mActor_name_t set_item = EMPTY_NO;
     int cat = category[RANDOM(10)];
 
-    if (RANDOM(8) == 0) {
+    if (RANDOM(8) == 0 && pc_hats_enabled()) {
         return PC_HAT_RANDOM(); /* PC: hats get thrown out at the dump too */
     }
 

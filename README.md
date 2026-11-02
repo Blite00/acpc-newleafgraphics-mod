@@ -59,7 +59,14 @@ files it reads against that release and warns if they differ. Other regions and 
    - it compiles the New Leaf build of the game with the bundled compiler;
    - it starts that build a few times for a second or two (a game window opens briefly) to record character and
      furniture poses, then finishes the conversion and rebuilds.
-7. The game starts. Later launches start the New Leaf build straight away.
+7. Before the conversion starts, a second window asks which **player heads** you want:
+   - **New Leaf heads** (default): New Leaf player heads and hairstyles, with the character creator at the start of a new game.
+   - **Original GameCube heads**: the GameCube player heads and faces. The character creator and the New Leaf hats are
+     turned off (hats are not sold or given, and can't be worn).
+
+   You can switch later in the game under **Settings > Gameplay > Player heads** (takes effect after a restart), or with
+   `original_heads = 0` / `1` in `settings.ini`.
+8. The game starts. Later launches start the New Leaf build straight away.
 
 If the ROM is missing, encrypted or not New Leaf, or anything fails, setup shows the reason and the game starts with the
 GameCube graphics instead. The full log is in `newleaf_cache\setup.log`.
@@ -70,6 +77,15 @@ GameCube graphics instead. The full log is in `newleaf_cache\setup.log`.
 
 Saves (`save/`), `settings.ini` and `keybindings.ini` are shared by both versions and use the normal ACGC-PC-Port
 format. Your own Dolphin-style HD texture packs still go in `texture_pack/`.
+
+### Updating from 1.0.0
+
+Extract the new release over your old folder (keep `rom`, `save`, `settings.ini` and `newleaf_cache`) and run
+`AnimalCrossing.exe`. The launcher sees the new version and runs the setup again so the game is rebuilt with the new changes.
+
+Changes in 1.1.0:
+- Player heads option: keep the original GameCube heads (installer choice and in-game setting). This also turns off the character creator and New Leaf hats.
+- Snow, rain, leaves and petals now fall across the whole widescreen view instead of the old 4:3 area.
 
 ## How it works
 
